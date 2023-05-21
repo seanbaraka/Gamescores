@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ['@nuxtjs/tailwindcss'],
+    modules: ['@nuxtjs/tailwindcss', '@sidebase/nuxt-auth'],
     css: ["~/assets/css/main.css" ],
     runtimeConfig: {
         public: {
@@ -10,7 +10,10 @@ export default defineNuxtConfig({
             storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
             messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
             appId: process.env.FIREBASE_APP_ID,
-            measurementId: process.env.FIREBASE_MEASUREMENT_ID
+            measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            AUTH_ORIGIN: process.env.AUTH_ORIGIN
         }
     }
 })

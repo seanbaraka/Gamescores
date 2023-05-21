@@ -10,11 +10,13 @@
     "start": "node .output/server/index.mjs"
   },
   "devDependencies": {
+    "@sidebase/nuxt-auth": "0.6.0-beta.2",
     "@types/node": "^18",
     "nuxt": "^3.4.3"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.7.0",
-    "firebase": "^9.22.0"
+    "firebase": "^9.22.0",
+    "next-auth": "4.21.1"
   }
 }
