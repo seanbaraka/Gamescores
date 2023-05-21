@@ -13,7 +13,8 @@ export default defineNuxtConfig({
             measurementId: process.env.FIREBASE_MEASUREMENT_ID,
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            AUTH_ORIGIN: process.env.AUTH_ORIGIN
+            AUTH_ORIGIN: process.env.AUTH_ORIGIN,
+            AUTH_SECRET: process.env.AUTH_SECRET,
         }
     }
 })
