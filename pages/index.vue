@@ -32,7 +32,7 @@ const pastFixtures = ref([
                 <h5>Pending Matches</h5>
                 <div class="matches-list">
                     <div v-for="fixture of fixtures"
-                        class="fixture item flex justify-between items-center my-4  py-[.75em] px-6 cursor-pointer font-light"
+                        class="fixture item flex justify-between text-sm items-center my-4  py-[.5em] px-6 cursor-pointer font-light"
                         :class="[fixture.premium ? 'border border-[#4392F1] bg-[#ECF5FF]' : 'bg-[#F8F8F8]']"
                         >
                         <p>{{ fixture.home }}</p>
@@ -41,9 +41,9 @@ const pastFixtures = ref([
                         <span v-if="fixture.premium">
                             <img src="@/assets/img/crown.png" alt="" srcset="">
                         </span>
-                        <div class="flex flex-col gap-1">
-                            <p class="text-xs uppercase font-bold" :class="[ fixture.premium ? 'text-[#4392F1]' : 'text-green-700']">{{ fixture.premium ? 'PREMIUM' : 'FREE' }}</p>
-                            <p class="flex gap-4 text-xs">
+                        <div class="flex flex-col">
+                            <p class="font-bold text-[10px]" :class="[ fixture.premium ? 'text-[#4392F1]' : 'text-green-700']">{{ fixture.premium ? 'PREMIUM' : 'FREE' }}</p>
+                            <p class="flex gap-4 font-medium text-[12px]">
                                 <span>{{ fixture.prediction }}</span>
                                 <span>{{ fixture.odds }}</span>
                             </p>
