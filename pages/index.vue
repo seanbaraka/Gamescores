@@ -70,7 +70,32 @@ const pastFixtures = ref([
                 </div>
             </div>
         </div>
-        <div class="right-bar flex-1 border border-t-0 border-b-0 border-r-0"></div>
+        <div class="right-bar flex-1 border border-t-0 border-b-0 border-r-0 p-10">
+           <div class="fixture-form">
+            <h2>Arsenal F.C vs Brighton Hove & Albion</h2>
+                <div class="flex flex-col my-2">
+                    <label class="text-sm mt-2" for="matchDate">Match Date</label>
+                    <input class="form-input" type="date" id="matchDate"/>
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-sm mt-2" for="home">Home Team</label>
+                    <input class="form-input" type="text" id="home"/>
+                </div>
+                <div class="flex flex-col my-2">
+                    <label class="text-sm mt-2" for="away">Away Team</label>
+                    <input class="form-input" type="text" id="away"/>
+                </div>
+                <div class="flex flex-col my-2">
+                    <label class="text-sm mt-2" for="prediction">Prediction</label>
+                    <input class="form-input" type="text" id="prediction"/>
+                </div>
+                <div class="flex flex-col my-2">
+                    <label class="text-sm mt-2" for="odds">Odds From The Bookies</label>
+                    <input class="form-input" type="text" id="odds"/>
+                </div>
+
+           </div> 
+        </div>
     </section>
 </template>
 <style scoped>
@@ -91,4 +116,8 @@ const pastFixtures = ref([
 .nav-link.router-link-active,
 .nav-link.router-link-exact-active {
     @apply rounded-full bg-gray-100 text-green-900 font-semibold
-}</style>
+}
+.form-input {
+    @apply p-4 border outline-none
+}
+</style>
