@@ -1,14 +1,12 @@
 <script setup lang="ts">
+
+const { data: fixtures, refresh, pending } = useFetch('/api/collections/fixtures');
+
 const { status, signOut } = useAuth();
 if (status.value !== 'authenticated') {
     navigateTo('auth')
 }
-const fixtures = ref([
-    { home: "Arsenal", away: "Brigton Albion & Hove", active: true, prediction: "Home Win", premium: false, odds: 1.23 },
-    { home: "Manchester City", away: "Chelsea", active: true, prediction: "Home Win", premium: true, odds: 1.56 },
-    { home: "Man Utd", away: "Everton", active: true, prediction: "Home Win", premium: false, odds: 1.23 },
-    { home: "Liverpool F.C", away: "Southampton F.C", active: true, prediction: "Home Win", premium: true, odds: 1.56 },
-]);
+
 const pastFixtures = ref([
     { home: "Arsenal", away: "Brigton Albion & Hove", correct: true, prediction: "Home Win", premium: false, odds: 1.23 },
     { home: "Manchester City", away: "Chelsea", correct: false, prediction: "Home Win", premium: true, odds: 1.56 },
@@ -26,6 +24,17 @@ const matchResults = [
     { key: 'Match Postponed'},
 ]
 
+type ActiveFixture = {
+    date: Date;
+    home: string,
+    away: string,
+    category: string,
+    prediction: string,
+    odds: string,
+    premium: boolean,
+    outcome?: string,
+}
+
 const fixtureCategories = [
     { key: 'Free' },
     { key: 'Premium' }
@@ -34,12 +43,34 @@ const fixtureCategory = ref({key: 'Free'})
 const selectedResult = ref()
 
 const isUpdatingFixture = ref(false);
-const saveOrUpdateFixture = () => {
-
+const activeFixture = ref<ActiveFixture>({} as ActiveFixture);
+const uploadingFixture = ref(false);
+const saveOrUpdateFixture = async() => {
+    // do nothing when we have nothing or missing fields
+    if(Object.keys(activeFixture.value).length < 5)  return;
+    uploadingFixture.value = true;
+    activeFixture.value.premium = fixtureCategory.value.key === 'Premium';
+    const { data: uploadFixture, pending, error } = await useFetch('/api/fixtures', {
+        method: "post",
+        body: activeFixture.value
+    });
+    if (!pending.value && uploadFixture.value) {
+        uploadingFixture.value = false;
+        await refresh();
+        // reset the form;
+        activeFixture.value = {} as ActiveFixture;
+    }
 }
 
 const setFixtureCategory = (category: any) => {
     fixtureCategory.value.key = category.key;
+}
+
+const updateCurrentFixture = (fixture: any) => {
+    activeFixture.value = fixture;
+    isUpdatingFixture.value = true;
+    fixtureCategory.value.key = fixture.premium ? "Premium" : "Free" 
+    // key.value = fixture.premium ? "Premium" : "Free"
 }
 </script>
 <template>
@@ -55,7 +86,8 @@ const setFixtureCategory = (category: any) => {
             <div class="pending-matches my-4">
                 <h5>Pending Matches</h5>
                 <div class="matches-list">
-                    <div v-for="fixture of fixtures"
+                    <div v-for="fixture of fixtures?.data"
+                        @click="updateCurrentFixture(fixture)"
                         class="fixture item flex justify-between text-sm items-center my-4  py-[.5em] px-6 cursor-pointer font-light"
                         :class="[fixture.premium ? 'border border-[#4392F1] bg-[#ECF5FF]' : 'bg-[#F8F8F8]']">
                         <p>{{ fixture.home }}</p>
@@ -98,22 +130,22 @@ const setFixtureCategory = (category: any) => {
         <div class="right-bar h-screen overflow-auto flex-1 border border-t-0 border-b-0 border-r-0 p-10">
             <div class="fixture-form">
                 <h2 class="form-header" v-if="!isUpdatingFixture">Add A new Fixture</h2>
-                <h2 class="form-header" v-else>Arsenal F.C vs Brighton Hove & Albion</h2>
+                <h2 class="form-header" v-else>{{ `${activeFixture?.home} vs ${activeFixture?.away}` }}</h2>
                 <div class="flex flex-col my-3">
                     <label class="text-sm my-2" for="matchDate">Match Date</label>
-                    <input class="form-input" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" type="date" id="matchDate" />
+                    <input class="form-input" v-model="activeFixture.date" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" type="date" id="matchDate" />
                 </div>
                 <div class="flex flex-col my-2">
                     <label for="category" class="text-sm my-2">Category</label>
-                    <CustomListBox :options="fixtureCategories" @on-option-selected="setFixtureCategory" />
+                    <CustomListBox :default-option-key="fixtureCategory.key" :options="fixtureCategories" @on-option-selected="setFixtureCategory" />
                 </div>
                 <div class="flex flex-col my-3">
                     <label class="text-sm my-2" for="home">Home Team</label>
-                    <input class="form-input" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Arsenal F.C" type="text" id="home" />
+                    <input class="form-input" v-model="activeFixture.home" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Arsenal F.C" type="text" id="home" />
                 </div>
                 <div class="flex flex-col my-3">
                     <label class="text-sm my-2" for="away">Away Team</label>
-                    <input class="form-input" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Manchester City" type="text" id="away" />
+                    <input class="form-input" v-model="activeFixture.away" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Manchester City" type="text" id="away" />
                 </div>
                 <div class="flex flex-col my-3">
                     <label class="text-sm my-2 flex gap-2 items-center relative" for="prediction">
@@ -124,7 +156,7 @@ const setFixtureCategory = (category: any) => {
                         </span>
                         <span>Prediction</span>
                     </label>
-                    <input class="form-input" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Home Win" type="text" id="prediction" />
+                    <input class="form-input" v-model="activeFixture.prediction" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Home Win" type="text" id="prediction" />
                 </div>
                 <div class="flex flex-col my-3" v-if="isUpdatingFixture">
                     <label class="text-sm my-2" for="prediction">Match Outcome</label>
@@ -132,10 +164,13 @@ const setFixtureCategory = (category: any) => {
                 </div>
                 <div class="flex flex-col my-3">
                     <label class="text-sm my-2" for="odds">Odds From The Bookies</label>
-                    <input class="form-input" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Home Win - 2.45" type="text" id="odds" />
+                    <input class="form-input" v-model="activeFixture.odds" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Home Win - 2.45" type="text" id="odds" />
                 </div>
-                <button @click="saveOrUpdateFixture" class="my-4 p-2.5 text-sm w-full" :class="[fixtureCategory.key === 'Free' ? 'text-green-700 bg-gray-100': 'text-[#4392F1] bg-[#ECF5FF]']">Update Match
+                <button v-if="!uploadingFixture" @click="saveOrUpdateFixture" class="my-4 p-2.5 text-sm w-full" :class="[fixtureCategory.key === 'Free' ? 'text-green-700 bg-gray-100': 'text-[#4392F1] bg-[#ECF5FF]']">Update Match
                     Details</button>
+                <p v-else class="my-4 p-2.5 text-sm w-full text-center" :class="[fixtureCategory.key === 'Free' ? 'text-green-700 bg-gray-100': 'text-[#4392F1] bg-[#ECF5FF]']">
+                Loading....
+                </p>
             </div>
         </div>
     </section>
