@@ -70,11 +70,10 @@
   import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
   
   const props = defineProps({
-    options: Array
+    options: Array,
   })
 
   const events = defineEmits(['onOptionSelected'])
-  
-  const selectedOption = ref(props.options[0])
+  const selectedOption = ref(props.defaultOptionKey ? { key: props.defaultOptionKey } : props.options[0])
   </script>
   
