@@ -4,9 +4,9 @@ useHead({
 });
 </script>
 <template>
-    <div class="section container">
-        <h1>PRIVACY POLICY</h1>
-        <h2>Introduction</h2>
+    <div class="section container max-w-[90%] m-auto py-8">
+        <h1 class="heading-lg">PRIVACY POLICY</h1>
+        <h2 class="heading">Introduction</h2>
         <p>
             This Privacy Policy document describes how Game Scores ("we," "us," "our")
             collects, uses, and protects your data when you use our mobile application
@@ -14,7 +14,7 @@ useHead({
             practices regarding your information and how we handle it.
         </p>
 
-        <h2>Data Collection</h2>
+        <h2 class="heading">Data Collection</h2>
         <p>
             Our app collects data necessary to ensure its optimal functionality. The
             types of information that we may collect include:
@@ -44,7 +44,7 @@ useHead({
             performance and providing a better user experience.
         </p>
 
-        <h2>Data Usage</h2>
+        <h2 class="heading">Data Usage</h2>
         <p>We use the data we collect to:</p>
         <ol>
             <li>Provide and maintain our services.</li>
@@ -58,7 +58,7 @@ useHead({
             </li>
         </ol>
 
-        <h2>Data Protection</h2>
+        <h2 class="heading">Data Protection</h2>
         <p>
             We implement a variety of security measures to maintain the safety of your
             personal information. We maintain suitable physical, electronic, and
@@ -66,14 +66,14 @@ useHead({
             stored on our system.
         </p>
 
-        <h2>Data Sharing</h2>
+        <h2 class="heading">Data Sharing</h2>
         <p>
             Game Scores respects your privacy rights and does not share, sell, rent,
             or trade any collected information with third parties for their
             promotional purposes.
         </p>
 
-        <h2>Your Rights</h2>
+        <h2 class="heading">Your Rights</h2>
         <p>
             As a user of our app, you have the right to request access to your
             personal data that we hold and to ask for correction if any data is
@@ -82,7 +82,7 @@ useHead({
             at the contact information provided below.
         </p>
 
-        <h2>Changes to this Policy</h2>
+        <h2 class="heading">Changes to this Policy</h2>
         <p>
             Game Scores reserves the right to amend this Privacy Policy at any time.
             We will notify you of any changes by posting the new Privacy Policy on
@@ -90,16 +90,29 @@ useHead({
             any changes.
         </p>
 
-        <h2>Contact Us</h2>
+        <h2 class="heading">Contact Us</h2>
         <p>
             If you have any questions about this Privacy Policy, please contact us at:
         </p>
         <p>Game Scores<br />(Provide your contact details)</p>
 
-        <h2>Consent</h2>
+        <h2 class="heading">Consent</h2>
         <p>
             By using our app, you hereby consent to our Privacy Policy and agree to
             its terms.
         </p>
     </div>
 </template>
+<style>
+.heading-lg {
+    @apply font-bold my-4 text-3xl
+}
+
+.heading {
+    @apply my-2 font-bold text-lg
+}
+
+ol {
+    @apply list-decimal list-inside my-2
+}
+</style>
