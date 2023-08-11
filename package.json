@@ -12,6 +12,7 @@
   "devDependencies": {
     "@sidebase/nuxt-auth": "0.6.0-beta.2",
     "@types/node": "^18",
+    "dayjs-nuxt": "^1.1.2",
     "nuxt": "^3.4.3"
   },
   "dependencies": {
