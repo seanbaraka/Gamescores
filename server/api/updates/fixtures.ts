@@ -1,20 +1,29 @@
 import {BASE_URL, RAPID_HEADERS} from "~/common/rapidapi";
+import dayjs from 'dayjs';
+
 
 export default defineEventHandler(async (event) => {
-    const response = await $fetch<any>(BASE_URL +'/v3/fixtures', {
+    const params = getQuery(event);
+    const apiCall = await $fetch<any>(BASE_URL +'/v3/fixtures', {
         params: {
-            date: '2023-08-11',
-            league: "39",
+           ...params,
             season: '2023'
         },
         headers: RAPID_HEADERS
     });
-    console.log('Epl Matches being played tomorrow',response.response.length);
-    console.log('The fixtures\n-------------');
-    const dayjs = useDayjs();
-    console.log(dayjs(response.response[0].fixture.timestamp))
-    console.log(response.response[0].fixture.id)
-    console.log(response.response[0].teams.home)
-    console.log(response.response[0].teams.away)
-    return []
+    const matches: any[] = apiCall.response;
+    if (!matches.length) {
+        return []
+    }
+    return matches.map((fx) => ({
+        id: fx.fixture.id,
+        date: dayjs(fx.fixture.timestamp * 1000).format('DD-MM-YYYY'),
+        time: dayjs(fx.fixture.timestamp * 1000).format('HH:mm'),
+        teams: fx.teams,
+        league: {
+            id: fx.league.id,
+            name: fx.league.name,
+            logo: fx.league.logo
+        }
+    }));
 })
