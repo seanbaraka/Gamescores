@@ -20,7 +20,12 @@ export default defineNuxtConfig({
             computed: {
                 origin: process.env.AUTH_ORIGIN
             }
+        },
+        redis: {
+            port: process.env.REDISPORT,
+            host: process.env.REDISHOST,
+            username: 'default',
+            password: process.env.REDISPASSWORD,
         }
-        
     }
 })
