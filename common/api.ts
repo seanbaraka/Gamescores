@@ -1,9 +1,9 @@
 import {BASE_URL, RAPID_HEADERS} from "~/common/rapidapi";
 import {match} from "assert";
 
-export const getFixtures = async (params: any) => {
+export const getFixtures = async (params: any, leagueId: number) => {
     // check for matches in the cache
-    const cache = await useStorage().getItem(`redis:fixtures::${params.date}::${params.league}`);
+    const cache = await useStorage().getItem(`redis:fixtures::${params.date}::${leagueId}`);
     if (cache) {
         console.log('Returning from cache')
         // return JSON.parse(cache.toString())
@@ -12,6 +12,7 @@ export const getFixtures = async (params: any) => {
     const apiCall: any = await $fetch<any>(BASE_URL +'/v3/fixtures', {
         params: {
             ...params,
+            league: leagueId,
             season: '2023'
         },
         headers: RAPID_HEADERS
@@ -20,8 +21,8 @@ export const getFixtures = async (params: any) => {
         return []
     }
     // save the data to redis
-    await useStorage().setItem(`redis:fixtures::${params.date}::${params.league}`, apiCall.response);
-    return apiCall.response;
+    await useStorage().setItem(`redis:fixtures::${params.date}::${leagueId}`, apiCall.response);
+    return apiCall.response as any[];
 }
 
 export const getLeagues = async () => {
