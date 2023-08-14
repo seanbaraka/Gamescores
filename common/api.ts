@@ -3,7 +3,7 @@ import {match} from "assert";
 
 export const getFixtures = async (params: any) => {
     // check for matches in the cache
-    const cache = await useStorage().getItem(`fixtures::${params.date}`);
+    const cache = await useStorage().getItem(`redis:fixtures::${params.date}`);
     if (cache) {
         console.log('Returning from cache')
         // return JSON.parse(cache.toString())
@@ -20,13 +20,13 @@ export const getFixtures = async (params: any) => {
         return []
     }
     // save the data to redis
-    await useStorage().setItem(`fixtures::${params.date}`, apiCall.response);
+    await useStorage().setItem(`redis:fixtures::${params.date}`, apiCall.response);
     return apiCall.response;
 }
 
 export const getLeagues = async () => {
     // check for matches in the cache
-    const cache = await useStorage().getItem(`leagues`);
+    const cache = await useStorage().getItem(`redis:leagues`);
     if (cache) {
         console.log('Returning from cache')
         // return JSON.parse(cache.toString())
@@ -39,6 +39,6 @@ export const getLeagues = async () => {
         return []
     }
     // save the data to redis
-    await useStorage().setItem(`leagues`, apiCall.response);
+    await useStorage().setItem(`redis:leagues`, apiCall.response);
     return apiCall.response;
 }
