@@ -9,7 +9,6 @@ export default defineEventHandler(async (event) => {
         const fixtures = await getFixtures(params, LEAGUES[i]);
         matches = [...matches, ...fixtures];
     }
-    console.log('Matches:', matches);
     return matches.map((fx: any) => ({
         id: fx.fixture.id,
         timestamp: fx.fixture.timestamp * 1000,
