@@ -1,11 +1,8 @@
-import {BASE_URL, RAPID_HEADERS} from "~/common/rapidapi";
+import {getLeagues} from "~/common/api";
 
 export default defineEventHandler(async(event) => {
     // Retrieves a list of all available leagues.
-    const apiCall = await $fetch<any>(BASE_URL +'/v3/leagues', {
-        headers: RAPID_HEADERS
-    });
-    const leagues: any[] = apiCall.response;
+    const leagues: any[] = await getLeagues();
     return leagues.map((league) => ({
         id: league.league.id,
         name: league.league.name,
