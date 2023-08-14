@@ -3,7 +3,7 @@ import {match} from "assert";
 
 export const getFixtures = async (params: any) => {
     // check for matches in the cache
-    const cache = await useStorage().getItem(`redis:fixtures::${params.date}`);
+    const cache = await useStorage().getItem(`redis:fixtures::${params.date}::${params.league}`);
     if (cache) {
         console.log('Returning from cache')
         // return JSON.parse(cache.toString())
@@ -20,7 +20,7 @@ export const getFixtures = async (params: any) => {
         return []
     }
     // save the data to redis
-    await useStorage().setItem(`redis:fixtures::${params.date}`, apiCall.response);
+    await useStorage().setItem(`redis:fixtures::${params.date}::${params.league}`, apiCall.response);
     return apiCall.response;
 }
 
