@@ -1,0 +1,13 @@
+name: 'Daily Retrieval of Fixtures'
+
+on:
+  schedule:
+    - cron: '* * * * * '
+
+jobs:
+  build:
+    name: Get Daily Fixtures List
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Pulling Data from rapid api
+        run: curl --silent https://gamescoreske.com/api/updates/fixtures
