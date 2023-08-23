@@ -2,8 +2,8 @@ import {getFixtures} from "~/common/api";
 import {LEAGUES} from "~/common/rapidapi";
 
 export default defineEventHandler(async (event) => {
-    console.log("I've been hit. What are you going to do ?")
     const params = getQuery(event);
+    console.log('Getting recent fixtures:', params )
     // get the fixtures
     let matches: any[] = [];
     for (let i = 0; i < LEAGUES.length; i++) {
