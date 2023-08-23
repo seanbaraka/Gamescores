@@ -8,6 +8,6 @@ node_modules
 dist
 .DS_Store
 .firebaserc
-.github
+# .github
 .firebase
 .idea
