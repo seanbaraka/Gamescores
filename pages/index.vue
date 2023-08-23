@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-const { data: fixtures, refresh, pending } = useFetch('/api/collections/fixtures');
+const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 
 const { status, signOut } = useAuth();
 if (status.value !== 'authenticated') {
@@ -83,30 +83,14 @@ const updateCurrentFixture = (fixture: any) => {
                 <NuxtLink @click="signOut()" class="nav-link cursor-pointer text-red-500 font-semibold">Logout</NuxtLink>
             </div>
             <h3 class="text-2xl font-semibold my-2">Recent Matches Across the globe</h3>
-            <div class="pending-matches my-4">
+            <div class="pending-matches my-4" v-if="fixtures.length">
                 <h5>Pending Matches</h5>
                 <div class="matches-list">
-                    <div v-for="fixture of fixtures?.data"
-                        @click="updateCurrentFixture(fixture)"
-                        class="fixture item flex justify-between text-sm items-center my-4  py-[.5em] px-6 cursor-pointer font-light"
-                        :class="[fixture.premium ? 'border border-[#4392F1] bg-[#ECF5FF]' : 'bg-[#F8F8F8]']">
-                        <p>{{ fixture.home }}</p>
-                        <p>vs</p>
-                        <p>{{ fixture.away }}</p>
-                        <span v-if="fixture.premium">
-                            <img src="@/assets/img/crown.png" alt="" srcset="">
-                        </span>
-                        <div class="flex flex-col">
-                            <p class="font-bold text-[10px]"
-                                :class="[fixture.premium ? 'text-[#4392F1]' : 'text-green-700']">{{ fixture.premium ?
-                                    'PREMIUM' : 'FREE' }}</p>
-                            <p class="flex gap-4 font-medium text-[12px]">
-                                <span>{{ fixture.prediction }}</span>
-                                <span>{{ fixture.odds }}</span>
-                            </p>
-                        </div>
-                    </div>
+
                 </div>
+            </div>
+            <div class="no-matches" v-else>
+              <h2>No Pending Matches Today</h2>
             </div>
             <div class="past-fixtures mt-10">
                 <h5>Past Matches</h5>
