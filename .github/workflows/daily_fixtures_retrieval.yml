@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Getting today's fixtures
-        run: curl --silent -X GET "https://gamescoreske.com/api/updates/fixtures?date=$(date + '%Y-%m-%d')"
+        run: curl --silent -X GET "https://gamescoreske.com/api/updates/fixtures?date=$(date +'%Y-%m-%dT%H:%M:%S')"

@@ -1,9 +1,10 @@
 import {getFixtures} from "~/common/api";
 import {LEAGUES} from "~/common/rapidapi";
+import dayjs from 'dayjs'
 
 export default defineEventHandler(async (event) => {
-    const params = getQuery(event);
-    console.log('Getting recent fixtures:', params )
+    const query = getQuery(event);
+    const params = { date: dayjs(query.date as string).format('YYYY-MM-DD') }
     // get the fixtures
     let matches: any[] = [];
     for (let i = 0; i < LEAGUES.length; i++) {
