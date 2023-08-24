@@ -60,7 +60,12 @@ export const getFixturesArchive = async(fixtureId: string) => {
     });
     if (apiCall.response) {
       const fixture = apiCall.response[0];
-      console.log(fixture);
+      return {
+        id: fixtureId,
+        timestamp: fixture.fixture.timestamp * 1000,
+        teams: fixture.teams,
+        score: fixture.score.fulltime
+      }
     }
   } catch (e: any) {
     console.log(`Could not fetch historical data for the fixture ${fixtureId}`, e.message)
