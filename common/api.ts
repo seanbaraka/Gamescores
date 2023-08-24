@@ -49,3 +49,20 @@ export const getLeagues = async () => {
   await useStorage().setItem(`redis:leagues`, apiCall.response);
   return apiCall.response;
 };
+
+export const getFixturesArchive = async(fixtureId: string) => {
+  try {
+    const apiCall = await $fetch<any>(BASE_URL + '/v3/fixtures', {
+      params: {
+        id: fixtureId
+      },
+      headers: RAPID_HEADERS,
+    });
+    if (apiCall.response) {
+      const fixture = apiCall.response[0];
+      console.log(fixture);
+    }
+  } catch (e: any) {
+    console.log(`Could not fetch historical data for the fixture ${fixtureId}`, e.message)
+  }
+}
