@@ -13,10 +13,12 @@
             </div>
             <div class="pending-matches my-4">
                 <div class="matches-list">
-                    <div class="match-card rounded-lg bg-gray-200 border-gray-200 p-5">
+                    <div class="match-card  bg-gray-100 border-gray-300 border-2  p-5">
                         <!-- Title -->
                         <div
-                            class="card-title  flex flex-row justify-between items-center border-solid border-gray-300 border-b-2 pb-4">
+                            class="card-title  flex flex-row justify-between items-center border-solid border-gray-300 transition duration-300" 
+                            :class="{'border-b-2 pb-4':showCard,'border-b-0':!showCard}"
+                            >
                             <p class="title-league">EPL</p>
                             <h2>Chelsea</h2>
                             <div class="title-time ">
@@ -24,10 +26,13 @@
                                 <p class="time text-gray-700">23:00 hrs</p>
                             </div>
                             <h2>Houton town</h2>
-                            <button  class="title-icon rounded-lg rotate-180 text-gray-500">V</button>
+                            <button @click="closeCard"  class="title-icon rounded-lg  text-gray-500 p-2 transition duration-300" :class="{'rotate-180': showCard, 'rotate-0': !showCard}">
+                            <!-- <span class="border-r-2 border-t-2 border-gray-500  px-0.5 ">&nbsp;&nbsp;</span> -->
+                            <img src="@/assets/svg/arrow.svg" class="w-5" alt="">
+                            </button>
                         </div>
                         <!-- card content -->
-                        <div class="card-container flex flex-row pt-5 justify-between">
+                        <div v-if="showCard" class="card-container flex flex-row pt-5 justify-between transition duration-300">
                             <div class="prematch-predictions w-1/2 px-4">
                                 <h3 class="font-bold">Prematch predictions</h3>
                                 <h4 class="text-gray-400 py-1">Type 1 x 2</h4>
@@ -68,7 +73,10 @@
                                     <span class="expected-goals__items">1&nbsp;&nbsp;Chelsea&nbsp;&nbsp;Un. 3.5</span><span class="expected-goals__items">2&nbsp;&nbsp;Luton Town&nbsp;&nbsp;Un. 1.5</span>
                                 </div>
                                 <p class="footnote py-2">
-                                    <span class="ai">AI Powered Advice&nbsp;</span>
+                                    <span class="crown">
+                                        <img class=" -rotate-150 translate-y-1" src="@/assets/img/crown.png" alt="" srcset="">
+                                    </span>
+                                    <span class="ai-note">AI Powered Advice&nbsp;</span>
                                     <span>&nbsp;Double chance : Chelsea or draw.</span>
                                 </p>
                             </div>
@@ -82,7 +90,7 @@
             <div class="past-fixtures mt-10">
                 <h5>Past Matches</h5>
                 <div class="matches-list">
-                    <div class="flex justify-between my-2 items-center text-sm px-4 py-[.75em] border"
+                    <div class="flex justify-between my-2 items-center text-sm px-4 py-[.75em] border rounded-lg"
                         v-for="fixture of pastFixtures"
                         :class="[fixture.correct ? 'bg-[#F8F8F8] border-[#4A7856] text-green-700' : 'bg-[#FFF5F9] text-[#FF4684] border-[#FFC8DA]']">
                         <p>12/05/2023</p>
@@ -105,7 +113,7 @@
                 <div class="container flex flex-row py-5">
                     <div class="select-league py-1 flex flex-col w-1/3 ">
                         <label for="league">Select league</label>
-                        <select name="league" class="form-input "
+                        <select name="league" class="form-input text-lg"
                             :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]' : 'focus:border-green-700']"
                             id="league">
                             <option value="">English premier league</option>
@@ -176,7 +184,8 @@
 </template>
 <script setup lang="ts">
 
-// this.showCard = true;
+let showCard = ref(true);
+
 
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 
@@ -251,15 +260,15 @@ const updateCurrentFixture = (fixture: any) => {
     // key.value = fixture.premium ? "Premium" : "Free"
 }
 // Closing the card
-// function closeCard(){
-//     console.log(this.showCard);
-//         if(this.showCard === true){
-//             this.showCard = false;
-//         }else{
-//             this.showCard = true;
-//         }
-//         console.log(this.showCard)
-// }
+function closeCard(){
+    console.log(showCard.value);
+        if(showCard.value === true){
+            showCard.value = false;
+        }else{
+            showCard.value = true;
+        }
+        console.log(showCard.value)
+}
 
 </script>
 

@@ -27,7 +27,7 @@
     @apply border-solid border-gray-200 border-b-2 bg-gray-100 py-2
 }
 .fixture-form{
-border-radius: 5%;
+@apply rounded-lg
 }
 .container{
     align-items: center;
@@ -36,10 +36,10 @@ border-radius: 5%;
 .form-header {
     @apply text-2xl
 }
-/* 
+
 .match-card{
-    border-radius: 5%;
-} */
+    @apply rounded-lg
+}
 /* CARD */
 
 .board{
@@ -96,6 +96,9 @@ border-radius: 5%;
     @apply border-2 border-gray-300 rounded-r-lg 
 }
 
-.footnote .ai{
+.footnote .ai-note{
     @apply bg-blue-300 text-blue-600 py-1 px-2 rounded-lg
 }
+/* .footnote .crown img{
+    transform: rotateZ('90deg');
+} */
