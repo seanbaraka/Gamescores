@@ -176,6 +176,8 @@
 </template>
 <script setup lang="ts">
 
+import UpdateFixtures from "~/components/UpdateFixtures.vue";
+
 // this.showCard = true;
 
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
