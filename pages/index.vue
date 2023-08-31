@@ -107,11 +107,11 @@
         </div>
         <div class="right-bar h-screen lg:overflow-auto overflow-scroll flex-1 border border-t-0 border-b-0 border-r-0 p-10">
             <div class="fixture-form border-solid border-gray-200 border-2 bg-gray-100 px-8 py-5">
-                <h2 class="form-header" v-if="!isUpdatingFixture">Update Fixtures</h2>
+                <h2 class="form-header font-bold" v-if="!isUpdatingFixture">Update Fixtures</h2>
                 <h2 class="form-header" v-else>{{ `${activeFixture?.home} vs ${activeFixture?.away}` }}</h2>
                 <div class="container flex flex-row py-5">
                     <div class="select-league py-1 flex flex-col w-1/3 ">
-                        <label for="league">Select league</label>
+                        <label for="league" class="font-bold mb-2">Select league</label>
                         <select name="league" class="form-input text-lg"
                             :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]' : 'focus:border-green-700']"
                             id="league">
@@ -123,60 +123,34 @@
                         </select>
                     </div>
                     <div class="flex flex-col w-1/3">
-                        <label class="text-sm" for="matchDate">Match Date</label>
+                        <label class="text-sm font-bold mb-2" for="matchDate">Match Date</label>
                         <input class="form-input " v-model="activeFixture.date"
                             :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]' : 'focus:border-green-700']"
                             type="date" id="matchDate" />
                     </div>
                 </div>
-                <div class="flex flex-col my-2">
-                    <label for="category" class="text-sm my-2">Category</label>
-                    <CustomListBox :default-option-key="fixtureCategory.key" :options="fixtureCategories"
-                        @on-option-selected="setFixtureCategory" />
+                <div class="choose-fixture flex flex-col ">
+                    <label for="fixture" class="font-bold mb-2">Choose fixture</label>
+                    <select name="fixture" id="" class="px-4 py-3 text-md rounded-lg bg-gray-100 border-2 border-gray-200">
+                        <option value="">Chelsea FC vs Man united</option>
+                        <option value="">Chelsea FC vs Fulham</option>
+                        <option value="">Chelsea FC vs WestHam</option>
+                            <option value="">Chelsea FC vs WestHam</option>
+                    </select>
                 </div>
-                <div class="flex flex-col my-3">
-                    <label class="text-sm my-2" for="home">Home Team</label>
-                    <input class="form-input" v-model="activeFixture.home"
-                        :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]' : 'focus:border-green-700']"
-                        placeholder="Arsenal F.C" type="text" id="home" />
-                </div>
-                <div class="flex flex-col my-3">
-                    <label class="text-sm my-2" for="away">Away Team</label>
-                    <input class="form-input" v-model="activeFixture.away"
-                        :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]' : 'focus:border-green-700']"
-                        placeholder="Manchester City" type="text" id="away" />
-                </div>
-                <div class="flex flex-col my-3">
-                    <label class="text-sm my-2 flex gap-2 items-center relative" for="prediction">
-                        <span class="gap-1 absolute bottom-[2px] left-[70px]" v-if="fixtureCategory.key === 'Premium'">
-                            <img src="@/assets/img/crown.png" class="w-4 h-4 inline-block" />
-                            <img src="@/assets/img/crown.png" class="w-4 h-4 inline-block" />
-                            <img src="@/assets/img/crown.png" class="w-4 h-4 inline-block" />
-                        </span>
-                        <span>Prediction</span>
-                    </label>
-                    <input class="form-input" v-model="activeFixture.prediction"
-                        :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]' : 'focus:border-green-700']"
-                        placeholder="Home Win" type="text" id="prediction" />
-                </div>
-                <div class="flex flex-col my-3" v-if="isUpdatingFixture">
-                    <label class="text-sm my-2" for="prediction">Match Outcome</label>
-                    <CustomListBox :options="matchResults" @on-option-selected="selectedResult" />
-                </div>
-                <div class="flex flex-col my-3">
-                    <label class="text-sm my-2" for="odds">Odds From The Bookies</label>
-                <input class="form-input" v-model="activeFixture.odds"
-                    :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']"
-                    placeholder="Home Win - 2.45" type="text" id="odds" />
-            </div>
-            <button v-if="!uploadingFixture" @click="saveOrUpdateFixture" class="my-4 p-2.5 text-sm w-full"
-                :class="[fixtureCategory.key === 'Free' ? 'text-green-700 bg-gray-100': 'text-[#4392F1] bg-[#ECF5FF]']">Update
-                Match
-                Details</button>
-            <p v-else class="my-4 p-2.5 text-sm w-full text-center"
-                :class="[fixtureCategory.key === 'Free' ? 'text-green-700 bg-gray-100': 'text-[#4392F1] bg-[#ECF5FF]']">
-                Loading....
-            </p>
+                <!-- Games -->
+                <section class="games flex flex-col my-10">
+                   <div class="game flex flex-row justify-between items-center">
+                    <span class="date text-gray-400">22 July</span>
+                    <span class="time text-gray-400">22:00</span>
+                    <div class="home-team">Chelsea FC</div>
+                    <span>Vs</span>
+                    <div class="away-team">Fulham FC</div>
+                    <button class="remove bg-red-300 px-4 py-2 rounded-lg text-red-800">Remove</button>
+                   </div> 
+                </section>
+                <!-- update fixtures button -->
+                <button class="update-fixtures text-center w-[100%] bg-gray-300 py-3 px-5 rounded-lg font-bold text-gray-600">Update Fixtures List</button>
         </div>
     </div>
 </section>
@@ -270,5 +244,5 @@ function closeCard(){
 </script>
 
 <style scoped>
-@import "../assets/css/pages/index.css";
+@import "@/assets/css/pages/index.css";
 </style>

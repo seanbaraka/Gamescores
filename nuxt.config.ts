@@ -2,6 +2,27 @@
 export default defineNuxtConfig({
     modules: ['@nuxtjs/tailwindcss', '@sidebase/nuxt-auth', 'dayjs-nuxt'],
     css: ["~/assets/css/main.css" ],
+    router:{
+        extendRoutes(routes, resolve) {
+            routes.push(
+                {
+                  name: 'index',
+                  path: '/',
+                  component: resolve(__dirname, 'pages/index.vue'),
+                },
+              {
+                name: 'members',
+                path: '/members',
+                component: resolve(__dirname, 'pages/members.vue'),
+              },
+              {
+                  name: '404',
+                path: '/:catchAll(.*)',
+                component: resolve(__dirname,'pages/404.vue'),
+              },
+            );
+        }
+    },
     runtimeConfig: {
         public: {
             apiKey: process.env.FIREBASE_API_KEY,
