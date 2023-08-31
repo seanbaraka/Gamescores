@@ -1,7 +1,7 @@
 <template>
-    <section class="h-screen overflow-hidden flex">
-        <div class="left-bar flex-1 h-screen overflow-auto px-10">
-            <div class="mb-10 top-navigation flex w-[90%] justify-between items-center sticky top-0 bg-white py-6">
+    <section class="h-screen overflow-hidden flex flex-col lg:flex-row">
+        <div class="left-bar flex-1 h-screen lg:overflow-auto px-10">
+            <div class="mb-10 top-navigation flex w-[100%] justify-between items-center sticky top-0 bg-white py-6">
                 <Logo />
                 <NuxtLink class="nav-link" to="/">Matches</NuxtLink>
                 <NuxtLink to="/members" class="nav-link">Members</NuxtLink>
@@ -13,10 +13,12 @@
             </div>
             <div class="pending-matches my-4">
                 <div class="matches-list">
-                    <div class="match-card rounded-lg bg-gray-200 border-gray-200 p-5">
+                    <div class="match-card  bg-gray-100 border-gray-300 border-2  p-5">
                         <!-- Title -->
                         <div
-                            class="card-title  flex flex-row justify-between items-center border-solid border-gray-300 border-b-2 pb-4">
+                            class="card-title  flex flex-row justify-between items-center border-solid border-gray-300 transition duration-300" 
+                            :class="{'border-b-2 pb-4':showCard,'border-b-0':!showCard}"
+                            >
                             <p class="title-league">EPL</p>
                             <h2>Chelsea</h2>
                             <div class="title-time ">
@@ -24,19 +26,21 @@
                                 <p class="time text-gray-700">23:00 hrs</p>
                             </div>
                             <h2>Houton town</h2>
-                            <button  class="title-icon rounded-lg rotate-180 text-gray-500">V</button>
+                            <button @click="closeCard"  class="title-icon rounded-lg  text-gray-500 p-2 transition duration-300" :class="{'rotate-180': showCard, 'rotate-0': !showCard}">
+                            <img src="@/assets/svg/arrow.svg" class="w-5" alt="">
+                            </button>
                         </div>
                         <!-- card content -->
-                        <div class="card-container flex flex-row pt-5 justify-between">
+                        <div v-if="showCard" class="card-container flex flex-row pt-5 justify-between transition duration-300">
                             <div class="prematch-predictions w-1/2 px-4">
                                 <h3 class="font-bold">Prematch predictions</h3>
                                 <h4 class="text-gray-400 py-1">Type 1 x 2</h4>
                                 <div class="first-board board">
-                                    <span class="first-board__items board-items w-1/3 rounded-l-lg border-green-500  bg-green-500 text-gray-50">1&nbsp;&nbsp;&nbsp;&nbsp;Home</span><span class="first-board__items board-items border-2   border-gray-300 ">X&nbsp;&nbsp;&nbsp;&nbsp;Draw</span><span class="first-board__items board-items border-2 border-gray-300  rounded-r-lg">2&nbsp;&nbsp;&nbsp;&nbsp;Away</span>
+                                    <span class="first-board__items board-items w-1/3 rounded-l-lg border-green-500  bg-green-500 text-gray-50">1&nbsp;Home</span><span class="first-board__items board-items border-2   border-gray-300 ">X&nbsp;Draw</span><span class="first-board__items board-items border-2 border-gray-300  rounded-r-lg">2&nbsp;Away</span>
                                 </div>
                                 <h4 class="text-gray-400 py-1">Type Ov/Un 1.5</h4>
                                 <div class="second-board board">
-                                    <span class="second-board__items board-items  rounded-l-lg bg-green-500 text-gray-50 border-green-500">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 1.5</span><span class="second-board__items board-items rounded-r-lg border-gray-300">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 1.5</span>
+                                    <span class="second-board__items board-items  rounded-l-lg bg-green-500 text-gray-50 border-green-500">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 1.5</span><span class="second-board__items board-items rounded-r-lg  border-gray-300">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 1.5</span>
                                 </div>
                                 <h4 class="text-gray-500 py-1">Type Ov/Un 2.5</h4>
                             <div class="third-board board">
@@ -53,7 +57,7 @@
                                         <span class="results">W</span>
                                         <span class="results">D</span><span class="results">W</span>
                                     </div>
-                                    <div class="results-container pl-5 second-results">
+                                    <div class="results-container pl-1 md:pl-5 second-results">
                                         <span class="results">W</span><span class="results">W</span><span class="results">D</span><span class="results">L</span><span class="results">L</span>
                                     </div>
                                 </div>
@@ -67,10 +71,13 @@
                                 <div class="expected-goals flex flex-row justify-between">
                                     <span class="expected-goals__items">1&nbsp;&nbsp;Chelsea&nbsp;&nbsp;Un. 3.5</span><span class="expected-goals__items">2&nbsp;&nbsp;Luton Town&nbsp;&nbsp;Un. 1.5</span>
                                 </div>
-                                <p class="footnote py-2">
-                                    <span class="ai">AI Powered Advice&nbsp;</span>
+                                <div class="footnote py-2">
+                                    <span class="crown">
+                                        <img class=" -rotate-150 translate-y-1" src="@/assets/img/crown.png" alt="" srcset="">
+                                    </span>
+                                    <span class="ai-note whitespace-no-wrap">AI Powered Advice&nbsp;</span>
                                     <span>&nbsp;Double chance : Chelsea or draw.</span>
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -82,7 +89,7 @@
             <div class="past-fixtures mt-10">
                 <h5>Past Matches</h5>
                 <div class="matches-list">
-                    <div class="flex justify-between my-2 items-center text-sm px-4 py-[.75em] border"
+                    <div class="flex justify-between my-2 items-center text-sm px-4 py-[.75em] border rounded-lg"
                         v-for="fixture of pastFixtures"
                         :class="[fixture.correct ? 'bg-[#F8F8F8] border-[#4A7856] text-green-700' : 'bg-[#FFF5F9] text-[#FF4684] border-[#FFC8DA]']">
                         <p>12/05/2023</p>
@@ -98,14 +105,14 @@
                 </div>
             </div>
         </div>
-        <div class="right-bar h-screen overflow-auto flex-1 border border-t-0 border-b-0 border-r-0 p-10">
+        <div class="right-bar h-screen lg:overflow-auto overflow-scroll flex-1 border border-t-0 border-b-0 border-r-0 p-10">
             <div class="fixture-form border-solid border-gray-200 border-2 bg-gray-100 px-8 py-5">
                 <h2 class="form-header" v-if="!isUpdatingFixture">Update Fixtures</h2>
                 <h2 class="form-header" v-else>{{ `${activeFixture?.home} vs ${activeFixture?.away}` }}</h2>
                 <div class="container flex flex-row py-5">
                     <div class="select-league py-1 flex flex-col w-1/3 ">
                         <label for="league">Select league</label>
-                        <select name="league" class="form-input "
+                        <select name="league" class="form-input text-lg"
                             :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]' : 'focus:border-green-700']"
                             id="league">
                             <option value="">English premier league</option>
@@ -175,6 +182,8 @@
 </section>
 </template>
 <script setup lang="ts">
+
+let showCard = ref(true);
 
 import UpdateFixtures from "~/components/UpdateFixtures.vue";
 
@@ -253,15 +262,13 @@ const updateCurrentFixture = (fixture: any) => {
     // key.value = fixture.premium ? "Premium" : "Free"
 }
 // Closing the card
-// function closeCard(){
-//     console.log(this.showCard);
-//         if(this.showCard === true){
-//             this.showCard = false;
-//         }else{
-//             this.showCard = true;
-//         }
-//         console.log(this.showCard)
-// }
+function closeCard(){
+        if(showCard.value === true){
+            showCard.value = false;
+        }else{
+            showCard.value = true;
+        }
+}
 
 </script>
 
