@@ -10,6 +10,7 @@
     "start": "node .output/server/index.mjs"
   },
   "devDependencies": {
+    "@nuxthq/ui": "^2.7.0",
     "@sidebase/nuxt-auth": "0.6.0-beta.2",
     "@types/node": "^18",
     "dayjs-nuxt": "^1.1.2",
@@ -20,7 +21,9 @@
     "@headlessui/vue": "^1.7.13",
     "@heroicons/vue": "^2.0.18",
     "@nuxtjs/tailwindcss": "^6.7.0",
+    "@popperjs/core": "^2.11.8",
     "firebase": "^9.22.0",
-    "next-auth": "4.21.1"
+    "next-auth": "4.21.1",
+    "v-calendar": "^3.0.3"
   }
 }
