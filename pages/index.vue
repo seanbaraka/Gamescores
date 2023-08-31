@@ -159,6 +159,9 @@
 
 let showCard = ref(true);
 
+import UpdateFixtures from "~/components/UpdateFixtures.vue";
+
+// this.showCard = true;
 
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 
