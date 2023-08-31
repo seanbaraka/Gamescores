@@ -1,4 +1,4 @@
-import { BASE_URL, RAPID_HEADERS } from '~/common/rapidapi';
+import {BASE_URL, LEAGUES, RAPID_HEADERS} from '~/common/rapidapi';
 
 export const getFixtures = async (params: any, leagueId: number) => {
   // check for matches in the cache
@@ -6,7 +6,7 @@ export const getFixtures = async (params: any, leagueId: number) => {
     `redis:fixtures::${params.date}::${leagueId}`,
   );
   if (cache) {
-    console.log('Returning from cache');
+    console.log('Returning fixtures from cache');
     // return JSON.parse(cache.toString())
     return cache as any[];
   }
@@ -39,15 +39,21 @@ export const getLeagues = async () => {
     // return JSON.parse(cache.toString())
     return cache as any[];
   }
-  const apiCall = await $fetch<any>(BASE_URL + '/v3/leagues', {
-    headers: RAPID_HEADERS,
-  });
-  if (!apiCall.response.length) {
-    return [];
+  const results: any[] = [];
+  for (const leagueId of LEAGUES) {
+    const apiCall = await $fetch<any>(BASE_URL + '/v3/leagues', {
+      params: {
+        id: leagueId
+      },
+      headers: RAPID_HEADERS,
+    });
+    const { league, country } = apiCall.response[0];
+    results.push({ id: league.id, name: league.name, logo: league.logo, country: country.name })
   }
+
   // save the data to redis
-  await useStorage().setItem(`redis:leagues`, apiCall.response);
-  return apiCall.response;
+  await useStorage().setItem(`redis:leagues`, results, { ttl: 60 * 60 * 24 });
+  return results;
 };
 
 export const getFixturesArchive = async(fixtureId: string) => {
@@ -69,5 +75,30 @@ export const getFixturesArchive = async(fixtureId: string) => {
     }
   } catch (e: any) {
     console.log(`Could not fetch historical data for the fixture ${fixtureId}`, e.message)
+  }
+}
+
+
+export async function getPredictions(fixtureId: string) {
+  try {
+    const apiCall = await $fetch<any>(BASE_URL + '/v3/predictions', {
+      params: {
+        fixture: fixtureId,
+      },
+      headers: RAPID_HEADERS,
+    });
+    if (apiCall.response) {
+      const { winner, win_or_draw, under_over, goals, advice, percentage } = apiCall.response[0].predictions;
+      const h2h = apiCall.response[0].h2h;
+      return {
+        winner,
+        underOver: under_over,
+        goals,
+        advice,
+        percentage
+      }
+    }
+  } catch (e) {
+    console.log('Could not load the predictions for the fixture', fixtureId)
   }
 }
