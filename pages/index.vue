@@ -1,7 +1,7 @@
 <template>
-    <section class="h-screen overflow-hidden flex">
-        <div class="left-bar flex-1 h-screen overflow-auto px-10">
-            <div class="mb-10 top-navigation flex w-[90%] justify-between items-center sticky top-0 bg-white py-6">
+    <section class="h-screen overflow-hidden flex flex-col lg:flex-row">
+        <div class="left-bar flex-1 h-screen lg:overflow-auto px-10">
+            <div class="mb-10 top-navigation flex w-[100%] justify-between items-center sticky top-0 bg-white py-6">
                 <Logo />
                 <NuxtLink class="nav-link" to="/">Matches</NuxtLink>
                 <NuxtLink to="/members" class="nav-link">Members</NuxtLink>
@@ -27,7 +27,6 @@
                             </div>
                             <h2>Houton town</h2>
                             <button @click="closeCard"  class="title-icon rounded-lg  text-gray-500 p-2 transition duration-300" :class="{'rotate-180': showCard, 'rotate-0': !showCard}">
-                            <!-- <span class="border-r-2 border-t-2 border-gray-500  px-0.5 ">&nbsp;&nbsp;</span> -->
                             <img src="@/assets/svg/arrow.svg" class="w-5" alt="">
                             </button>
                         </div>
@@ -37,11 +36,11 @@
                                 <h3 class="font-bold">Prematch predictions</h3>
                                 <h4 class="text-gray-400 py-1">Type 1 x 2</h4>
                                 <div class="first-board board">
-                                    <span class="first-board__items board-items w-1/3 rounded-l-lg border-green-500  bg-green-500 text-gray-50">1&nbsp;&nbsp;&nbsp;&nbsp;Home</span><span class="first-board__items board-items border-2   border-gray-300 ">X&nbsp;&nbsp;&nbsp;&nbsp;Draw</span><span class="first-board__items board-items border-2 border-gray-300  rounded-r-lg">2&nbsp;&nbsp;&nbsp;&nbsp;Away</span>
+                                    <span class="first-board__items board-items w-1/3 rounded-l-lg border-green-500  bg-green-500 text-gray-50">1&nbsp;Home</span><span class="first-board__items board-items border-2   border-gray-300 ">X&nbsp;Draw</span><span class="first-board__items board-items border-2 border-gray-300  rounded-r-lg">2&nbsp;Away</span>
                                 </div>
                                 <h4 class="text-gray-400 py-1">Type Ov/Un 1.5</h4>
                                 <div class="second-board board">
-                                    <span class="second-board__items board-items  rounded-l-lg bg-green-500 text-gray-50 border-green-500">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 1.5</span><span class="second-board__items board-items rounded-r-lg border-gray-300">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 1.5</span>
+                                    <span class="second-board__items board-items  rounded-l-lg bg-green-500 text-gray-50 border-green-500">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 1.5</span><span class="second-board__items board-items rounded-r-lg  border-gray-300">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 1.5</span>
                                 </div>
                                 <h4 class="text-gray-500 py-1">Type Ov/Un 2.5</h4>
                             <div class="third-board board">
@@ -58,7 +57,7 @@
                                         <span class="results">W</span>
                                         <span class="results">D</span><span class="results">W</span>
                                     </div>
-                                    <div class="results-container pl-5 second-results">
+                                    <div class="results-container pl-1 md:pl-5 second-results">
                                         <span class="results">W</span><span class="results">W</span><span class="results">D</span><span class="results">L</span><span class="results">L</span>
                                     </div>
                                 </div>
@@ -72,13 +71,13 @@
                                 <div class="expected-goals flex flex-row justify-between">
                                     <span class="expected-goals__items">1&nbsp;&nbsp;Chelsea&nbsp;&nbsp;Un. 3.5</span><span class="expected-goals__items">2&nbsp;&nbsp;Luton Town&nbsp;&nbsp;Un. 1.5</span>
                                 </div>
-                                <p class="footnote py-2">
+                                <div class="footnote py-2">
                                     <span class="crown">
                                         <img class=" -rotate-150 translate-y-1" src="@/assets/img/crown.png" alt="" srcset="">
                                     </span>
-                                    <span class="ai-note">AI Powered Advice&nbsp;</span>
+                                    <span class="ai-note whitespace-no-wrap">AI Powered Advice&nbsp;</span>
                                     <span>&nbsp;Double chance : Chelsea or draw.</span>
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -106,7 +105,7 @@
                 </div>
             </div>
         </div>
-        <div class="right-bar h-screen overflow-auto flex-1 border border-t-0 border-b-0 border-r-0 p-10">
+        <div class="right-bar h-screen lg:overflow-auto overflow-scroll flex-1 border border-t-0 border-b-0 border-r-0 p-10">
             <div class="fixture-form border-solid border-gray-200 border-2 bg-gray-100 px-8 py-5">
                 <h2 class="form-header" v-if="!isUpdatingFixture">Update Fixtures</h2>
                 <h2 class="form-header" v-else>{{ `${activeFixture?.home} vs ${activeFixture?.away}` }}</h2>
@@ -261,13 +260,11 @@ const updateCurrentFixture = (fixture: any) => {
 }
 // Closing the card
 function closeCard(){
-    console.log(showCard.value);
         if(showCard.value === true){
             showCard.value = false;
         }else{
             showCard.value = true;
         }
-        console.log(showCard.value)
 }
 
 </script>
