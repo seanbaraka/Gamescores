@@ -106,53 +106,8 @@
             </div>
         </div>
         <div class="right-bar h-screen lg:overflow-auto overflow-scroll flex-1 border border-t-0 border-b-0 border-r-0 p-10">
-            <div class="fixture-form border-solid border-gray-200 border-2 bg-gray-100 px-8 py-5">
-                <h2 class="form-header font-bold" v-if="!isUpdatingFixture">Update Fixtures</h2>
-                <h2 class="form-header" v-else>{{ `${activeFixture?.home} vs ${activeFixture?.away}` }}</h2>
-                <div class="container flex flex-row py-5">
-                    <div class="select-league py-1 flex flex-col w-1/3 ">
-                        <label for="league" class="font-bold mb-2">Select league</label>
-                        <select name="league" class="form-input text-lg"
-                            :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]' : 'focus:border-green-700']"
-                            id="league">
-                            <option value="">English premier league</option>
-                            <option value="">Spanish La Liga</option>
-                            <option value="">Italian Serie A</option>
-                            <option value="">German Bundesliga</option>
-                            <option value="">French Ligue 1</option>
-                        </select>
-                    </div>
-                    <div class="flex flex-col w-1/3">
-                        <label class="text-sm font-bold mb-2" for="matchDate">Match Date</label>
-                        <input class="form-input " v-model="activeFixture.date"
-                            :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]' : 'focus:border-green-700']"
-                            type="date" id="matchDate" />
-                    </div>
-                </div>
-                <div class="choose-fixture flex flex-col ">
-                    <label for="fixture" class="font-bold mb-2">Choose fixture</label>
-                    <select name="fixture" id="" class="px-4 py-3 text-md rounded-lg bg-gray-100 border-2 border-gray-200">
-                        <option value="">Chelsea FC vs Man united</option>
-                        <option value="">Chelsea FC vs Fulham</option>
-                        <option value="">Chelsea FC vs WestHam</option>
-                            <option value="">Chelsea FC vs WestHam</option>
-                    </select>
-                </div>
-                <!-- Games -->
-                <section class="games flex flex-col my-10">
-                   <div class="game flex flex-row justify-between items-center">
-                    <span class="date text-gray-400">22 July</span>
-                    <span class="time text-gray-400">22:00</span>
-                    <div class="home-team">Chelsea FC</div>
-                    <span>Vs</span>
-                    <div class="away-team">Fulham FC</div>
-                    <button class="remove bg-red-300 px-4 py-2 rounded-lg text-red-800">Remove</button>
-                   </div> 
-                </section>
-                <!-- update fixtures button -->
-                <button class="update-fixtures text-center w-[100%] bg-gray-300 py-3 px-5 rounded-lg font-bold text-gray-600">Update Fixtures List</button>
+                <UpdateFixtures/>
         </div>
-    </div>
 </section>
 </template>
 <script setup lang="ts">
