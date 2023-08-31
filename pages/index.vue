@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import UpdateFixtures from "~/components/UpdateFixtures.vue";
+
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 
 const { status, signOut } = useAuth();
@@ -111,52 +113,7 @@ const updateCurrentFixture = (fixture: any) => {
                 </div>
             </div>
         </div>
-        <div class="right-bar h-screen overflow-auto flex-1 border border-t-0 border-b-0 border-r-0 p-10">
-            <div class="fixture-form">
-                <h2 class="form-header" v-if="!isUpdatingFixture">Add A new Fixture</h2>
-                <h2 class="form-header" v-else>{{ `${activeFixture?.home} vs ${activeFixture?.away}` }}</h2>
-                <div class="flex flex-col my-3">
-                    <label class="text-sm my-2" for="matchDate">Match Date</label>
-                    <input class="form-input" v-model="activeFixture.date" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" type="date" id="matchDate" />
-                </div>
-                <div class="flex flex-col my-2">
-                    <label for="category" class="text-sm my-2">Category</label>
-                    <CustomListBox :default-option-key="fixtureCategory.key" :options="fixtureCategories" @on-option-selected="setFixtureCategory" />
-                </div>
-                <div class="flex flex-col my-3">
-                    <label class="text-sm my-2" for="home">Home Team</label>
-                    <input class="form-input" v-model="activeFixture.home" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Arsenal F.C" type="text" id="home" />
-                </div>
-                <div class="flex flex-col my-3">
-                    <label class="text-sm my-2" for="away">Away Team</label>
-                    <input class="form-input" v-model="activeFixture.away" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Manchester City" type="text" id="away" />
-                </div>
-                <div class="flex flex-col my-3">
-                    <label class="text-sm my-2 flex gap-2 items-center relative" for="prediction">
-                        <span class="gap-1 absolute bottom-[2px] left-[70px]" v-if="fixtureCategory.key === 'Premium'">
-                            <img src="@/assets/img/crown.png" class="w-4 h-4 inline-block" />
-                            <img src="@/assets/img/crown.png" class="w-4 h-4 inline-block" />
-                            <img src="@/assets/img/crown.png" class="w-4 h-4 inline-block" />
-                        </span>
-                        <span>Prediction</span>
-                    </label>
-                    <input class="form-input" v-model="activeFixture.prediction" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Home Win" type="text" id="prediction" />
-                </div>
-                <div class="flex flex-col my-3" v-if="isUpdatingFixture">
-                    <label class="text-sm my-2" for="prediction">Match Outcome</label>
-                    <CustomListBox :options="matchResults" @on-option-selected="selectedResult" /> 
-                </div>
-                <div class="flex flex-col my-3">
-                    <label class="text-sm my-2" for="odds">Odds From The Bookies</label>
-                    <input class="form-input" v-model="activeFixture.odds" :class="[fixtureCategory.key !== 'Free' ? 'focus:border-[#4392F1]': 'focus:border-green-700']" placeholder="Home Win - 2.45" type="text" id="odds" />
-                </div>
-                <button v-if="!uploadingFixture" @click="saveOrUpdateFixture" class="my-4 p-2.5 text-sm w-full" :class="[fixtureCategory.key === 'Free' ? 'text-green-700 bg-gray-100': 'text-[#4392F1] bg-[#ECF5FF]']">Update Match
-                    Details</button>
-                <p v-else class="my-4 p-2.5 text-sm w-full text-center" :class="[fixtureCategory.key === 'Free' ? 'text-green-700 bg-gray-100': 'text-[#4392F1] bg-[#ECF5FF]']">
-                Loading....
-                </p>
-            </div>
-        </div>
+        <UpdateFixtures />
     </section>
 </template>
 <style scoped>
