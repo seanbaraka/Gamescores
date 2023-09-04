@@ -4,7 +4,6 @@ let showCard = ref(true);
 
 import UpdateFixtures from "~/components/UpdateFixtures.vue";
 
-// this.showCard = true;
 
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 
@@ -90,8 +89,8 @@ function closeCard() {
 </script>
 <template>
     <section class="h-screen overflow-hidden flex flex-col lg:flex-row">
-        <div class="left-bar flex-1 h-screen lg:overflow-auto px-10">
-            <div class="mb-10 top-navigation flex w-[100%] justify-between items-center sticky top-0 bg-white py-6">
+        <div class="left-bar flex-1 h-screen  overflow-scroll  px-10">
+            <div class="mb-10 top-navigation flex w-[100%] justify-between items-center sticky top-0 bg-white py-6 z-10">
                 <Logo />
                 <NuxtLink class="nav-link" to="/">Matches</NuxtLink>
                 <NuxtLink to="/members" class="nav-link">Members</NuxtLink>
@@ -180,7 +179,7 @@ function closeCard() {
                                 </div>
                                 <div class="footnote py-2">
                                     <span class="crown">
-                                        <img class=" -rotate-150 translate-y-1" src="@/assets/img/crown.png" alt=""
+                                        <img class="translate-y-1" src="@/assets/img/crown.png" alt=""
                                             srcset="">
                                     </span>
                                     <span class="ai-note whitespace-no-wrap">AI Powered Advice&nbsp;</span>
@@ -214,9 +213,9 @@ function closeCard() {
         </div>
     </div>
     <div
-        class="right-bar h-screen lg:overflow-auto overflow-scroll flex-1 border border-t-0 border-b-0 border-r-0 p-10">
+        class="right-bar h-screen lg:overflow-auto overflow-scroll  flex-1 border border-t-0 border-b-0 border-r-0 p-10">
         <UpdateFixtures />
     </div>
-</section></template>
-
+</section>
+</template>
 <style scoped>@import "@/assets/css/pages/index.css";</style>
