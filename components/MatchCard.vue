@@ -8,7 +8,7 @@ const props = defineProps({
     awayTeam:String,
     awayLogo:String,
     id: String,
-    timestamp:Number
+    timestamp:Number,
 })
 const id = props.id
 const timestamp = props.timestamp
@@ -23,10 +23,19 @@ console.log(day,month,hours,minutes);
 const monthNames:string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]
 
 let showCard = ref(false);
+let advice:string;
+let underOver:string;
+let homeGoal:string;
+let awayGoal:string;
 // Closing the card
 async function openCard() {
     const {data:cardData,err,pending:gettingData} = await useFetch<any[]>(`/api/updates/predictions?fixture=${id}`)
-    console.log(cardData.value)
+    console.log(cardData.value);
+    advice = cardData.value.advice;
+    underOver = cardData.value.underOver;
+    homeGoal = cardData.value.goals.home;
+    awayGoal = cardData.value.goals.away;
+    // advice = cardData.value[0].advice
     if (showCard.value === true) {
         showCard.value = false;
     } else {
@@ -116,16 +125,16 @@ async function openCard() {
                                     <!-- Expected goals -->
                                     <h4 class="py-2 text-gray-500">Expected goals</h4>
                                     <div class="expected-goals flex flex-row justify-between">
-                                        <span class="expected-goals__items">1&nbsp;&nbsp;Chelsea&nbsp;&nbsp;Un. 3.5</span><span
-                                            class="expected-goals__items">2&nbsp;&nbsp;Luton Town&nbsp;&nbsp;Un. 1.5</span>
+                                        <span class="expected-goals__items">1&nbsp;&nbsp;{{homeTeam}}&nbsp;&nbsp;Un. {{ homeGoal }}</span><span
+                                            class="expected-goals__items">2&nbsp;&nbsp;{{awayTeam}}&nbsp;&nbsp;Un. {{ awayGoal }}</span>
                                     </div>
                                     <div class="footnote py-2">
                                         <span class="crown">
-                                            <img class="translate-y-1" src="@/assets/img/crown.png" alt=""
+                                            <img class="translate-y-1 rotate-1" src="@/assets/img/crown.png" alt=""
                                                 srcset="">
                                         </span>
                                         <span class="ai-note whitespace-no-wrap">AI Powered Advice&nbsp;</span>
-                                        <span>&nbsp;Double chance : Chelsea or draw.</span>
+                                        <span>&nbsp;{{ advice }}.</span>
                                     </div>
                                 </div>
                             </div>
