@@ -41,22 +41,29 @@ let homeGoal: string;
 let awayGoal: string;
 // Closing the card
 async function openCard() {
-  const {
-    data: cardData,
-    err,
-    pending: gettingData,
-  } = await useFetch<any[]>(`/api/updates/predictions?fixture=${id}`);
-  console.log(cardData.value);
-  advice = cardData.value.advice;
-  underOver = cardData.value.underOver;
-  homeGoal = cardData.value.goals.home;
-  awayGoal = cardData.value.goals.away;
-  // advice = cardData.value[0].advice
-  if (showCard.value === true) {
-    showCard.value = false;
-  } else {
-    showCard.value = true;
-  }
+    // advice = cardData.value[0].advice
+    if (showCard.value === true) {
+        showCard.value = false; 
+    } else {
+        const { data: cardData, err, pending: gettingData } = await useFetch<any[]>(`/api/updates/predictions?fixture=${id}`)
+        advice = cardData.value.advice;
+        underOver = Number(cardData.value.underOver);
+        homeGoal = Math.abs(Number(cardData.value.goals.home));
+        awayGoal = Math.abs(Number(cardData.value.goals.away));
+        winner = cardData.value.winner.name;
+        if (winner === props.homeTeam) {
+            winner = "Home"
+        } else if (winner === props.awayTeam) {
+            winner = "Away"
+        } else {
+            winner = "Draw" 
+        }
+        showCard.value = true;
+        console.clear();
+        console.log(winner);
+        console.log(cardData.value);
+        console.log(underOver);
+    }
 }
 </script>
 <template>
