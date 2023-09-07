@@ -24,22 +24,35 @@ const monthNames:string[] = ["January","February","March","April","May","June","
 
 let showCard = ref(false);
 let advice:string;
-let underOver:string;
+let underOver:number;
 let homeGoal:string;
 let awayGoal:string;
+let winner:string;
 // Closing the card
 async function openCard() {
-    const {data:cardData,err,pending:gettingData} = await useFetch<any[]>(`/api/updates/predictions?fixture=${id}`)
-    console.log(cardData.value);
-    advice = cardData.value.advice;
-    underOver = cardData.value.underOver;
-    homeGoal = cardData.value.goals.home;
-    awayGoal = cardData.value.goals.away;
+
     // advice = cardData.value[0].advice
     if (showCard.value === true) {
-        showCard.value = false;
+        showCard.value = false; 
     } else {
+        const { data: cardData, err, pending: gettingData } = await useFetch<any[]>(`/api/updates/predictions?fixture=${id}`)
+        advice = cardData.value.advice;
+        underOver = Number(cardData.value.underOver);
+        homeGoal = cardData.value.goals.home;
+        awayGoal = cardData.value.goals.away;
+        winner = cardData.value.winner.name;
+        if (winner === props.homeTeam) {
+            winner = "Home"
+        } else if (winner === props.awayTeam) {
+            winner = "Away"
+        } else {
+            winner = "Draw" 
+        }
         showCard.value = true;
+        console.clear();
+        console.log(winner);
+        console.log(cardData.value);
+        console.log(underOver);
     }
 }
 
@@ -78,25 +91,39 @@ async function openCard() {
                                     <h4 class="text-gray-400 py-1">Type 1 x 2</h4>
                                     <div class="first-board board">
                                         <span
-                                            class="first-board__items board-items w-1/3 rounded-l-lg border-green-500  bg-green-500 text-gray-50">1&nbsp;Home</span><span
-                                            class="first-board__items board-items border-2   border-gray-300 ">X&nbsp;Draw</span><span
-                                            class="first-board__items board-items border-2 border-gray-300  rounded-r-lg">2&nbsp;Away</span>
+                                            class="first-board__items board-items w-1/3 rounded-l-lg border-2" 
+                                            :class="winner === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            >1&nbsp;Home</span><span
+                                            class="first-board__items board-items border-2 "
+                                            :class="underOver === 0 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            >X&nbsp;Draw</span><span
+                                            class="first-board__items board-items border-2 border-gray-300  rounded-r-lg"
+                                            :class="winner === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            >2&nbsp;Away</span>
                                     </div>
                                     <h4 class="text-gray-400 py-1">Type Ov/Un 1.5</h4>
                                     <div class="second-board board">
                                         <span
-                                            class="second-board__items board-items  rounded-l-lg bg-green-500 text-gray-50 border-green-500">1&nbsp;&nbsp;&nbsp;&nbsp;Ov.
+                                            class="second-board__items board-items  rounded-l-lg"
+                                            :class="underOver != -1.5 && underOver != 0? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            >1&nbsp;&nbsp;&nbsp;&nbsp;Ov.
                                             1.5</span><span
-                                            class="second-board__items board-items rounded-r-lg  border-gray-300">2&nbsp;&nbsp;&nbsp;&nbsp;Un.
+                                            class="second-board__items board-items rounded-r-lg "
+                                            :class="underOver == -1.5 || underOver === 0 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            >2&nbsp;&nbsp;&nbsp;&nbsp;Un.
                                             1.5</span>
                                     </div>
                                     <h4 class="text-gray-500 py-1">Type Ov/Un 2.5</h4>
                                     <div class="third-board board">
                                         <span
-                                            class="third-board__items board-items rounded-l-lg border-gray-300">1&nbsp;&nbsp;&nbsp;&nbsp;Ov.
-                                            1.5</span><span
-                                            class="third-board__items board-items rounded-r-lg bg-green-500 border-green-500 text-gray-50">2&nbsp;&nbsp;&nbsp;&nbsp;Un.
-                                            1.5</span>
+                                            class="third-board__items board-items rounded-l-lg "
+                                            :class="underOver >= 2.5 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            >1&nbsp;&nbsp;&nbsp;&nbsp;Ov.
+                                            2.5</span><span
+                                            class="third-board__items board-items rounded-r-lg"
+                                            :class="underOver < 2.5 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            >2&nbsp;&nbsp;&nbsp;&nbsp;Un.
+                                            2.5</span>
                                     </div>
                                 </div>
                                 <div class="w-1/2 px-4">
