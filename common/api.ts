@@ -1,4 +1,10 @@
-import {BASE_URL, LEAGUES, RAPID_HEADERS} from '~/common/rapidapi';
+import { BASE_URL, LEAGUES, RAPID_HEADERS } from '~/common/rapidapi';
+
+export enum TTL {
+  DAILY = 60 * 60 * 24,
+  WEEKLY = 86400 * 7,
+  MONTHLY = 604801 * 4
+}
 
 export const getFixtures = async (params: any, leagueId: number) => {
   // check for matches in the cache
@@ -25,7 +31,7 @@ export const getFixtures = async (params: any, leagueId: number) => {
   await useStorage().setItem(
     `redis:fixtures::${params.date}::${leagueId}`,
     apiCall.response,
-    { ttl: 60 * 60 * 24 },
+    { ttl: TTL.DAILY },
   );
 
   return apiCall.response as any[];
@@ -43,24 +49,29 @@ export const getLeagues = async () => {
   for (const leagueId of LEAGUES) {
     const apiCall = await $fetch<any>(BASE_URL + '/v3/leagues', {
       params: {
-        id: leagueId
+        id: leagueId,
       },
       headers: RAPID_HEADERS,
     });
     const { league, country } = apiCall.response[0];
-    results.push({ id: league.id, name: league.name, logo: league.logo, country: country.name })
+    results.push({
+      id: league.id,
+      name: league.name,
+      logo: league.logo,
+      country: country.name,
+    });
   }
 
   // save the data to redis
-  await useStorage().setItem(`redis:leagues`, results, { ttl: 60 * 60 * 24 });
+  await useStorage().setItem(`redis:leagues`, results, { ttl: TTL.MONTHLY });
   return results;
 };
 
-export const getFixturesArchive = async(fixtureId: string) => {
+export const getFixturesArchive = async (fixtureId: string) => {
   try {
     const apiCall = await $fetch<any>(BASE_URL + '/v3/fixtures', {
       params: {
-        id: fixtureId
+        id: fixtureId,
       },
       headers: RAPID_HEADERS,
     });
@@ -70,16 +81,24 @@ export const getFixturesArchive = async(fixtureId: string) => {
         id: fixtureId,
         timestamp: fixture.fixture.timestamp * 1000,
         teams: fixture.teams,
-        score: fixture.score.fulltime
-      }
+        score: fixture.score.fulltime,
+      };
     }
   } catch (e: any) {
-    console.log(`Could not fetch historical data for the fixture ${fixtureId}`, e.message)
+    console.log(
+      `Could not fetch historical data for the fixture ${fixtureId}`,
+      e.message,
+    );
   }
-}
-
+};
 
 export async function getPredictions(fixtureId: string) {
+  const cache = await useStorage.getItem(`redis:prediction:${fixtureId}`);
+  if (cache) {
+    console.log(`Fixture ${fixtureId} cache result`);
+    return cache as any[];
+  }
+
   try {
     const apiCall = await $fetch<any>(BASE_URL + '/v3/predictions', {
       params: {
@@ -88,18 +107,22 @@ export async function getPredictions(fixtureId: string) {
       headers: RAPID_HEADERS,
     });
     if (apiCall.response) {
-      const { winner, win_or_draw, under_over, goals, advice, percent } = apiCall.response[0].predictions;
+      const { winner, win_or_draw, under_over, goals, advice, percent } =
+        apiCall.response[0].predictions;
       const h2h = apiCall.response[0].h2h;
-      console.log(percent)
-      return {
+      const resp = {
         winner,
         underOver: under_over,
         goals,
         advice,
         percent,
-      }
+      };
+      await useStorage.setItem(`redis:prediction:${fixtureId}`, resp, {
+        ttl: TTL.WEEKLY,
+      });
+      return resp;
     }
   } catch (e) {
-    console.log('Could not load the predictions for the fixture', fixtureId)
+    console.log('Could not load the predictions for the fixture', fixtureId);
   }
 }
