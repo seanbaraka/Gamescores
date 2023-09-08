@@ -35,10 +35,15 @@ const monthNames: string[] = [
 ];
 
 let showCard = ref(false);
-let advice: string;
-let underOver: string;
-let homeGoal: string;
-let awayGoal: string;
+
+let advice:string;
+let underOver:number;
+let homeGoal:string;
+let awayGoal:string;
+let winner:string;
+let percentHome:string;
+let percentDraw:string;
+let percentAway:String;
 // Closing the card
 async function openCard() {
     // advice = cardData.value[0].advice
@@ -50,6 +55,9 @@ async function openCard() {
         underOver = Number(cardData.value.underOver);
         homeGoal = Math.abs(Number(cardData.value.goals.home));
         awayGoal = Math.abs(Number(cardData.value.goals.away));
+        percentHome = cardData.value.percent.home;
+        percentDraw = cardData.value.percent.draw;
+        percentAway = cardData.value.percent.away;
         winner = cardData.value.winner.name;
         if (winner === props.homeTeam) {
             winner = "Home"
@@ -58,8 +66,9 @@ async function openCard() {
         } else {
             winner = "Draw" 
         }
+        // console.clear();
         showCard.value = true;
-        console.clear();
+        console.log(percentHome);
         console.log(winner);
         console.log(cardData.value);
         console.log(underOver);
@@ -67,7 +76,6 @@ async function openCard() {
 }
 </script>
 <template>
-  <div class="match-card bg-gray-100 border-gray-300 border-2 mb-2 p-5">
     <!-- Title -->
     <div
       class="card-title flex flex-row justify-between items-center border-solid border-gray-300 transition duration-300"
@@ -185,7 +193,6 @@ async function openCard() {
         </div>
       </div>
     </div>
-  </div>
 </template>
 <style scoped>
 .match-card {
