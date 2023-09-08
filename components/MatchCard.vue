@@ -1,6 +1,8 @@
 <script setup lang="ts">
 // props
-const props = defineProps({
+
+// TODO: If home and away highlight home 
+ const props = defineProps({
     leagueName:String,
     leagueLogo: String,
     homeTeam:String,
@@ -152,9 +154,15 @@ async function openCard() {
                                     <!-- Expected outcome -->
                                     <h4 class="py-2 text-gray-500">Expected Outcome</h4>
                                     <div class="expected-outcomes flex flex-row">
-                                        <span class="expected-outcomes__items">{{ percentHome }} Home</span><span
-                                            class="expected-outcomes__items">{{ percentDraw }} Draw</span><span
-                                            class="expected-outcomes__items">{{ percentAway }} Away</span>
+                                        <span class="expected-outcomes__items"
+                                        :class="winner === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                        >{{ percentHome }} Home</span><span
+                                            class="expected-outcomes__items"
+                                            :class="underOver === 0 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            >{{ percentDraw }} Draw</span><span
+                                            class="expected-outcomes__items"
+                                            :class="winner === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            >{{ percentAway }} Away</span>
                                     </div>
                                     <!-- Expected goals -->
                                     <h4 class="py-2 text-gray-500">Expected goals</h4>
@@ -216,10 +224,10 @@ async function openCard() {
     @apply bg-red-600
 }
 .expected-outcomes__items{
-    @apply w-1/3 px-2 py-1 text-center items-center border-2 border-gray-300
+    @apply w-1/3 px-2 py-1 text-center items-center border-2
 }
 .expected-outcomes__items:nth-child(1){
-    @apply bg-green-500 text-gray-50 border-green-500 border-2 rounded-l-lg
+    @apply  border-2 rounded-l-lg
 }
 
 .expected-outcomes__items:nth-child(3){
