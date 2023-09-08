@@ -28,6 +28,9 @@ let underOver:number;
 let homeGoal:string;
 let awayGoal:string;
 let winner:string;
+let percentHome:string;
+let percentDraw:string;
+let percentAway:String;
 // Closing the card
 async function openCard() {
 
@@ -40,6 +43,9 @@ async function openCard() {
         underOver = Number(cardData.value.underOver);
         homeGoal = Math.abs(Number(cardData.value.goals.home));
         awayGoal = Math.abs(Number(cardData.value.goals.away));
+        percentHome = cardData.value.percent.home;
+        percentDraw = cardData.value.percent.draw;
+        percentAway = cardData.value.percent.away;
         winner = cardData.value.winner.name;
         if (winner === props.homeTeam) {
             winner = "Home"
@@ -48,8 +54,9 @@ async function openCard() {
         } else {
             winner = "Draw" 
         }
+        // console.clear();
         showCard.value = true;
-        console.clear();
+        console.log(percentHome);
         console.log(winner);
         console.log(cardData.value);
         console.log(underOver);
@@ -145,14 +152,16 @@ async function openCard() {
                                     <!-- Expected outcome -->
                                     <h4 class="py-2 text-gray-500">Expected Outcome</h4>
                                     <div class="expected-outcomes flex flex-row">
-                                        <span class="expected-outcomes__items">45% Home</span><span
-                                            class="expected-outcomes__items">45% Draw</span><span
-                                            class="expected-outcomes__items">10% Away</span>
+                                        <span class="expected-outcomes__items">{{ percentHome }} Home</span><span
+                                            class="expected-outcomes__items">{{ percentDraw }} Draw</span><span
+                                            class="expected-outcomes__items">{{ percentAway }} Away</span>
                                     </div>
                                     <!-- Expected goals -->
                                     <h4 class="py-2 text-gray-500">Expected goals</h4>
                                     <div class="expected-goals flex flex-row justify-between">
-                                        <span class="expected-goals__items">1&nbsp;&nbsp;{{homeTeam}}&nbsp;&nbsp;Un. {{ homeGoal }}</span><span
+                                        <span class="expected-goals__items"
+                                        
+                                        >1&nbsp;&nbsp;{{homeTeam}}&nbsp;&nbsp;Un. {{ homeGoal }}</span><span
                                             class="expected-goals__items">2&nbsp;&nbsp;{{awayTeam}}&nbsp;&nbsp;Un. {{ awayGoal }}</span>
                                     </div>
                                     <div class="footnote py-2">
