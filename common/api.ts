@@ -93,7 +93,7 @@ export const getFixturesArchive = async (fixtureId: string) => {
 };
 
 export async function getPredictions(fixtureId: string) {
-  const cache = await useStorage.getItem(`redis:prediction:${fixtureId}`);
+  const cache = await useStorage().getItem(`redis:prediction:${fixtureId}`);
   if (cache) {
     console.log(`Fixture ${fixtureId} cache result`);
     return cache as any[];
@@ -117,7 +117,7 @@ export async function getPredictions(fixtureId: string) {
         advice,
         percent,
       };
-      await useStorage.setItem(`redis:prediction:${fixtureId}`, resp, {
+      await useStorage().setItem(`redis:prediction:${fixtureId}`, resp, {
         ttl: TTL.WEEKLY,
       });
       return resp;
