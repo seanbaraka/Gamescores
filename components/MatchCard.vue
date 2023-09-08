@@ -160,9 +160,11 @@ async function openCard() {
                                     <h4 class="py-2 text-gray-500">Expected goals</h4>
                                     <div class="expected-goals flex flex-row justify-between">
                                         <span class="expected-goals__items"
-                                        
+                                        :class="homeGoal > awayGoal ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
                                         >1&nbsp;&nbsp;{{homeTeam}}&nbsp;&nbsp;Un. {{ homeGoal }}</span><span
-                                            class="expected-goals__items">2&nbsp;&nbsp;{{awayTeam}}&nbsp;&nbsp;Un. {{ awayGoal }}</span>
+                                            class="expected-goals__items"
+                                            :class="awayGoal>homeGoal? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            >2&nbsp;&nbsp;{{awayTeam}}&nbsp;&nbsp;Un. {{ awayGoal }}</span>
                                     </div>
                                     <div class="footnote py-2">
                                         <span class="crown">
@@ -228,10 +230,10 @@ async function openCard() {
     @apply w-1/2 px-2 py-1
 }
 .expected-goals__items:nth-child(1){
-    @apply bg-green-500 text-gray-50 border-green-500 border-2 rounded-l-lg
+    @apply  border-2 rounded-l-lg
 }
 .expected-goals__items:nth-child(2){
-    @apply border-2 border-gray-300 rounded-r-lg 
+    @apply border-2  rounded-r-lg 
 }
 .footnote .ai-note{
     @apply bg-blue-300 text-blue-600 py-1 px-2 rounded-lg
