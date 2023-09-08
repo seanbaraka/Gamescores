@@ -88,14 +88,15 @@ export async function getPredictions(fixtureId: string) {
       headers: RAPID_HEADERS,
     });
     if (apiCall.response) {
-      const { winner, win_or_draw, under_over, goals, advice, percentage } = apiCall.response[0].predictions;
+      const { winner, win_or_draw, under_over, goals, advice, percent } = apiCall.response[0].predictions;
       const h2h = apiCall.response[0].h2h;
+      console.log(percent)
       return {
         winner,
         underOver: under_over,
         goals,
         advice,
-        percentage
+        percent,
       }
     }
   } catch (e) {
