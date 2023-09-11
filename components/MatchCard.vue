@@ -243,8 +243,9 @@ async function openCard() {
 .expected-goals__items {
   @apply w-1/2 px-2 py-1;
 }
-.expected-goals__items:nth-child(1){
-    @apply  border-2 rounded-l-lg
+
+.expected-goals__items {
+  @apply w-1/2 px-2 py-1;
 }
 .expected-goals__items:nth-child(2){
     @apply border-2  rounded-r-lg
