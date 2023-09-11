@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // props
+
  const props = defineProps({
     leagueName:String,
     leagueLogo: String,
@@ -12,28 +13,15 @@
 })
 const id = props.id
 const timestamp = props.timestamp
-
 const date = new Date(timestamp);
-const day: string = date.getDate().toString().padStart(2, '0');
-const month: number = date.getMonth() + 1;
-const hours: string = date.getHours().toString().padStart(2, '0');
-const minutes: string = date.getMinutes().toString().padStart(2, '0');
-
+const day:string = date.getDate().toString().padStart(2, '0');
+const month:number = date.getMonth()+1;
+const hours:string = date.getHours().toString().padStart(2, '0');
+const minutes:string = date.getMinutes().toString().padStart(2, '0');
+console.clear();
+console.log(day,month,hours,minutes);
 // month names
-const monthNames: string[] = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
+const monthNames:string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]
 
 let showCard = ref(false);
 let advice:string;
@@ -68,13 +56,8 @@ async function openCard() {
         console.log(cardData.value);
         console.log(underOver);
     }
-    // console.clear();
-    showCard.value = true;
-    console.log(winner);
-    console.log(cardData.value);
-    console.log(underOver);
-  }
 }
+
 </script>
 <template>
         <div class="match-card  bg-gray-100 border-gray-300 border-2 mb-2  p-5">
@@ -197,42 +180,41 @@ async function openCard() {
                         </div>
 </template>
 <style scoped>
-.match-card {
-  @apply rounded-lg;
+.match-card{
+    @apply rounded-lg
 }
-.board {
-  @apply flex flex-row justify-between items-center text-left md:text-center;
+.board{
+    @apply flex flex-row justify-between items-center text-left md:text-center
 }
-.board-items {
-  @apply px-2 py-1 border-2 text-sm;
+.board-items{
+    @apply px-2 py-1 border-2 text-sm
 }
-.first-board__items {
-  @apply w-1/3;
+.first-board__items{
+    @apply w-1/3 
 }
-.second-board__items {
-  @apply w-1/2;
-}
-
-.third-board__items {
-  @apply w-1/2;
-}
-.results-container {
-  @apply w-1/2 flex flex-row justify-between;
+.second-board__items{
+    @apply w-1/2  
 }
 
-.results-container .results {
-  @apply bg-green-500 inline-block px-0.5 md:px-2 text-gray-50 text-center;
+.third-board__items{
+    @apply w-1/2
+}
+.results-container{
+    @apply w-1/2 flex flex-row justify-between 
 }
 
-.first-results .results:nth-child(4) {
-  @apply bg-gray-400;
+.results-container .results{
+    @apply bg-green-500 inline-block px-0.5 md:px-2 text-gray-50 text-center 
 }
-.second-results .results:nth-child(3) {
-  @apply bg-gray-400;
+
+.first-results .results:nth-child(4){
+    @apply bg-gray-400
 }
-.second-results .results:nth-child(4),
-.second-results .results:nth-child(5) {
-  @apply bg-red-600;
+.second-results .results:nth-child(3){
+    @apply bg-gray-400
+}
+.second-results .results:nth-child(4), .second-results .results:nth-child(5){
+    @apply bg-red-600
 }
 .expected-outcomes__items{
     @apply w-1/3 px-2 py-1 text-center items-center border-2
@@ -241,12 +223,12 @@ async function openCard() {
     @apply  border-2 rounded-l-lg
 }
 
-.expected-outcomes__items:nth-child(3) {
-  @apply rounded-r-lg;
+.expected-outcomes__items:nth-child(3){
+    @apply rounded-r-lg
 }
 
-.expected-goals__items {
-  @apply w-1/2 px-2 py-1;
+.expected-goals__items{
+    @apply w-1/2 px-2 py-1
 }
 .expected-goals__items:nth-child(1){
     @apply  border-2 rounded-l-lg
@@ -254,7 +236,7 @@ async function openCard() {
 .expected-goals__items:nth-child(2){
     @apply border-2  rounded-r-lg 
 }
-.footnote .ai-note {
-  @apply bg-blue-300 text-blue-600 py-1 px-2 rounded-lg;
+.footnote .ai-note{
+    @apply bg-blue-300 text-blue-600 py-1 px-2 rounded-lg
 }
 </style>

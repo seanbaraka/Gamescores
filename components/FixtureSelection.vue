@@ -1,40 +1,14 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 
-const props = defineProps({ date: String, league: String });
-
-const fixtures = ref([])
-// const search = async (q) => {
-//   console.log('fetching fixtures', props.date)
-//   const fixtures = await $fetch('/api/updates/fixtures', {
-//     params: { date: props.date },
-//   });
-//   console.log('obtained', fixtures.length)
-//   return fixtures
-//     .map((fx) => ({
-//       id: fx.id,
-//       timestamp: fx.timestamp,
-//       label: fx.teams.home.name + ' vs ' + fx.teams.away.name,
-//       home: { name: fx.teams.home.name, logo: { src: fx.teams.home.logo } },
-//       away: { name: fx.teams.away.name, logo: { src: fx.teams.away.logo } },
-//       avatar: { src: fx.league.logo },
-//       suffix: fx.league,
-//     }))
-//     .filter(Boolean);
-// };
-
-const loadingFixtures = ref(true);
-
-const getFixtures = async (date: string, league: string) => {
-  console.log('The league', league)
-  const { data, pending, error } = await useFetch('/api/updates/fixtures', {
-    params: { date, league }
+const props = defineProps({ date: String });
+const search = async (q) => {
+  const fixtures = await $fetch('/api/updates/fixtures', {
+    params: { date: props.date },
   });
-  if (pending.value) {
-    loadingFixtures.value = pending.value;
-  }
-  if (data) {
-    fixtures.value = data.value.map((fx) => ({
+
+  return fixtures
+    .map((fx) => ({
       id: fx.id,
       timestamp: fx.timestamp,
       label: fx.teams.home.name + ' vs ' + fx.teams.away.name,
@@ -42,17 +16,9 @@ const getFixtures = async (date: string, league: string) => {
       away: { name: fx.teams.away.name, logo: { src: fx.teams.away.logo } },
       avatar: { src: fx.league.logo },
       suffix: fx.league,
-    }));
-    loadingFixtures.value = false;
-  }
-}
-
-watch(props, async(n, o) => {
-  // Retrieve a new list of fixtures when the date value changes
-  console.log(n.date, n.league )
-  const newDate = n.date;
-  await getFixtures(newDate, n.league);
-})
+    }))
+    .filter(Boolean);
+};
 
 const selected = ref();
 
@@ -65,11 +31,11 @@ const recordChange = (e) => {
 
 <template>
   <div class="fixture-selection">
-    <label for="fixture" class="text-xs font-semibold">Choose a Fixture {{ props.date }} {{ props.league }}</label>
+    <label for="fixture" class="text-xs font-semibold">Choose a Fixture</label>
     <USelectMenu
       v-model="selected"
+      :searchable="search"
       placeholder="Choose the desired fixtures.."
-      :options="fixtures"
       by="id"
       @change="recordChange"
     >
@@ -102,12 +68,12 @@ const recordChange = (e) => {
           <span class="text-xs text-gray-400">{{ fixture.id }}</span>
           <span class="text-sm text-right">{{ fixture.home.name }}</span>
           <div class="mid-section flex items-center gap-4">
-            <UAvatar class="self-center" size="sm" :src="fixture.home.logo.src" />
+            <UAvatar class="self-center h-20 w-20" :src="fixture.home.logo.src" size="2xs" />
             <div class="flex flex-col items-center">
               <UAvatar :src="fixture.avatar.src" size="3xs" />
               <span class="text-xs">{{ dayjs(fixture.timestamp).format('HH:mm') }}</span>
             </div>
-            <UAvatar :src="fixture.away.logo.src" size="sm" />
+            <UAvatar :src="fixture.away.logo.src" size="3xs" />
           </div>
           <span class="text-sm">{{ fixture.away.name }}</span>
           <Link class="">Remove</Link>
