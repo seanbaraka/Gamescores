@@ -74,7 +74,6 @@ async function openCard() {
     console.log(cardData.value);
     console.log(underOver);
   }
-}
 </script>
 <template>
         <div class="match-card  bg-gray-100 border-gray-300 border-2 mb-2  p-5">
