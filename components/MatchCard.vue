@@ -53,8 +53,6 @@ async function openCard() {
         advice = cardData.value.advice;
         underOver = Number(cardData.value.underOver);
         goals = {home:Math.abs(Number(cardData.value.goals.home)),away:Math.abs(Number(cardData.value.goals.away))};
-        homeGoal = Math.abs(Number(cardData.value.goals.home));
-        awayGoal = Math.abs(Number(cardData.value.goals.away));
         percent = cardData.value.percent;
         winner = cardData.value.winner;
         if (winner.name === props.homeTeam) {
