@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 const isUpdatingFixture = ref(false);
 // const { data: leagues, error, pending } = useFetch('/api/updates/leagues');
-const searchLeague = async (q) => {
+const search = async (q) => {
   const leagues = await $fetch('/api/updates/leagues', { params: { q } });
 
   return leagues
@@ -17,7 +17,7 @@ const searchLeague = async (q) => {
     .filter(Boolean);
 };
 
-const selectedLeague = ref({id: "39", label: 'Premier League'});
+const selected = ref();
 
 const date = ref(new Date());
 
@@ -30,12 +30,22 @@ const label = computed(() =>
   }),
 );
 
-const formatedDate = computed(() => dayjs(date.value).format('YYYY-MM-DD'));
+const selectedFixture = ref([]);
+const fixtures = async (date?: string) => {
+  const data = await $fetch(
+    `/api/updates/fixtures?date=${dayjs(date).format('YYYY-MM-DD')}`,
+  );
+  return data
+    .map((fx: any) => ({ id: fx.id, label: fx.teams }))
+    .filter(Boolean);
+};
+
+const formatedDate = computed(() => dayjs(Date.now()).format('YYYY-MM-DD'));
 
 </script>
 
 <template>
-  <div class="right-bar overflow-auto flex-1 p-10 min-h-[90vh]">
+  <div class="right-bar overflow-auto flex-1 p-10">
     <div class="fixture-form bg-gray-100 rounded-lg p-4">
       <h2
         class="form-header p-2 text-xl border-b-[1px] font-semibold"
@@ -48,8 +58,8 @@ const formatedDate = computed(() => dayjs(date.value).format('YYYY-MM-DD'));
           <label for="league" class="text-xs">Choose A League</label>
           <USelectMenu
             class="min-w-full p-4"
-            v-model="selectedLeague"
-            :searchable="searchLeague"
+            v-model="selected"
+            :searchable="search"
             id="league"
             placeholder="Search For a specific league"
             by="id"
@@ -68,7 +78,7 @@ const formatedDate = computed(() => dayjs(date.value).format('YYYY-MM-DD'));
         </div>
       </div>
       <div class="fixture-selection py-2">
-        <fixture-selection :date="formatedDate"  :league="selectedLeague.id"/>
+        <fixture-selection :date="formatedDate" />
       </div>
     </div>
   </div>

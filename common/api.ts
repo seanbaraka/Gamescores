@@ -6,10 +6,10 @@ export enum TTL {
   MONTHLY = 604801 * 4
 }
 
-export const getFixtures = async (params: any) => {
+export const getFixtures = async (params: any, leagueId: number) => {
   // check for matches in the cache
   const cache = await useStorage().getItem(
-    `redis:fixtures::${params.date}::${params.league}`,
+    `redis:fixtures::${params.date}::${leagueId}`,
   );
   if (cache) {
     console.log('Returning fixtures from cache');
@@ -19,6 +19,7 @@ export const getFixtures = async (params: any) => {
   const apiCall: any = await $fetch<any>(BASE_URL + '/v3/fixtures', {
     params: {
       ...params,
+      league: leagueId,
       season: '2023',
     },
     headers: RAPID_HEADERS,
