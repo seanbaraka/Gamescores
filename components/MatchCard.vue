@@ -114,7 +114,7 @@ async function openCard() {
                                             :class="winner === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
                                             >1&nbsp;Home</span><span
                                             class="first-board__items board-items border-2 "
-                                            :class="underOver === 0 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            :class="winner !== 'Home' && winner !== 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
                                             >X&nbsp;Draw</span><span
                                             class="first-board__items board-items border-2 border-gray-300  rounded-r-lg"
                                             :class="winner === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
@@ -168,7 +168,7 @@ async function openCard() {
                                         :class="winner === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
                                         >{{ percentHome }} Home</span><span
                                             class="expected-outcomes__items"
-                                            :class="underOver === 0 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            :class="winner !== 'Home' && winner !== 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
                                             >{{ percentDraw }} Draw</span><span
                                             class="expected-outcomes__items"
                                             :class="winner === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
@@ -178,7 +178,7 @@ async function openCard() {
                                     <h4 class="py-2 text-gray-500">Expected goals</h4>
                                     <div class="expected-goals flex flex-row justify-between">
                                         <span class="expected-goals__items"
-                                        :class="homeGoal > awayGoal ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                        :class="homeGoal >= awayGoal  ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
                                         >1&nbsp;&nbsp;{{homeTeam}}&nbsp;&nbsp;Un. {{ homeGoal }}</span><span
                                             class="expected-goals__items"
                                             :class="awayGoal>homeGoal? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
