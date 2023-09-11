@@ -39,12 +39,10 @@ let showCard = ref(false);
 
 let advice:string;
 let underOver:number;
-let homeGoal:string;
-let awayGoal:string;
-let winner:string;
-let percentHome:string;
-let percentDraw:string;
-let percentAway:String;
+let goals:{home:number;away:number};
+let winner:{id:string;name:string;comment:string};
+let winnerName:string;
+let percent:{home:string;draw:string;away:string};
 // Closing the card
 async function openCard() {
     // advice = cardData.value[0].advice
@@ -54,22 +52,20 @@ async function openCard() {
         const { data: cardData, err, pending: gettingData } = await useFetch<any[]>(`/api/updates/predictions?fixture=${id}`)
         advice = cardData.value.advice;
         underOver = Number(cardData.value.underOver);
+        goals = {home:Math.abs(Number(cardData.value.goals.home)),away:Math.abs(Number(cardData.value.goals.away))};
         homeGoal = Math.abs(Number(cardData.value.goals.home));
         awayGoal = Math.abs(Number(cardData.value.goals.away));
-        percentHome = cardData.value.percent.home;
-        percentDraw = cardData.value.percent.draw;
-        percentAway = cardData.value.percent.away;
-        winner = cardData.value.winner.name;
-        if (winner === props.homeTeam) {
-            winner = "Home"
-        } else if (winner === props.awayTeam) {
-            winner = "Away"
+        percent = cardData.value.percent;
+        winner = cardData.value.winner;
+        if (winner.name === props.homeTeam) {
+            winnerName = "Home"
+        } else if (winner.name === props.awayTeam) {
+            winnerName = "Away"
         } else {
-            winner = "Draw"
+            winnerName = "Draw"
         }
         // console.clear();
         showCard.value = true;
-        console.log(percentHome);
         console.log(winner);
         console.log(cardData.value);
         console.log(underOver);
@@ -111,13 +107,13 @@ async function openCard() {
                                     <div class="first-board board">
                                         <span
                                             class="first-board__items board-items w-1/3 rounded-l-lg border-2"
-                                            :class="winner === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            :class="winnerName === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
                                             >1&nbsp;Home</span><span
                                             class="first-board__items board-items border-2 "
-                                            :class="winner !== 'Home' && winner !== 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            :class="winnerName !== 'Home' && winnerName !== 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
                                             >X&nbsp;Draw</span><span
                                             class="first-board__items board-items border-2 border-gray-300  rounded-r-lg"
-                                            :class="winner === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            :class="winnerName === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
                                             >2&nbsp;Away</span>
                                     </div>
                                     <h4 class="text-gray-400 py-1">Type Ov/Un 1.5</h4>
@@ -165,24 +161,24 @@ async function openCard() {
                                     <h4 class="py-2 text-gray-500">Expected Outcome</h4>
                                     <div class="expected-outcomes flex flex-row">
                                         <span class="expected-outcomes__items"
-                                        :class="winner === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
-                                        >{{ percentHome }} Home</span><span
+                                        :class="winnerName === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                        >{{ percent.home }} Home</span><span
                                             class="expected-outcomes__items"
-                                            :class="winner !== 'Home' && winner !== 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
-                                            >{{ percentDraw }} Draw</span><span
+                                            :class="winnerName !== 'Home' && winnerName !== 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            >{{ percent.draw }} Draw</span><span
                                             class="expected-outcomes__items"
-                                            :class="winner === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
-                                            >{{ percentAway }} Away</span>
+                                            :class="winnerName === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            >{{ percent.away }} Away</span>
                                     </div>
                                     <!-- Expected goals -->
                                     <h4 class="py-2 text-gray-500">Expected goals</h4>
                                     <div class="expected-goals flex flex-row justify-between">
                                         <span class="expected-goals__items"
-                                        :class="homeGoal >= awayGoal  ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
-                                        >1&nbsp;&nbsp;{{homeTeam}}&nbsp;&nbsp;Un. {{ homeGoal }}</span><span
+                                        :class="goals.home >= goals.away  ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                        >1&nbsp;&nbsp;{{homeTeam}}&nbsp;&nbsp;Un. {{ goals.home }}</span><span
                                             class="expected-goals__items"
-                                            :class="awayGoal>homeGoal? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
-                                            >2&nbsp;&nbsp;{{awayTeam}}&nbsp;&nbsp;Un. {{ awayGoal }}</span>
+                                            :class="goals.away>goals.home? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            >2&nbsp;&nbsp;{{awayTeam}}&nbsp;&nbsp;Un. {{ goals.away }}</span>
                                     </div>
                                     <div class="footnote py-2">
                                         <span class="crown">
