@@ -45,8 +45,8 @@ const formatedDate = computed(() => dayjs(Date.now()).format('YYYY-MM-DD'));
 </script>
 
 <template>
-  <div class="right-bar overflow-auto flex-1 p-10">
-    <div class="fixture-form bg-gray-100 rounded-lg p-4">
+  <div class="right-bar overflow-auto flex-1 min-h-[90vh]">
+    <div class="fixture-form bg-gray-50 rounded-xl p-4">
       <h2
         class="form-header p-2 text-xl border-b-[1px] font-semibold"
         v-if="!isUpdatingFixture"
