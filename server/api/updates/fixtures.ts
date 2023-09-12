@@ -1,5 +1,4 @@
-import { getFixtures } from '~/common/api';
-import { LEAGUES } from '~/common/rapidapi';
+import { getUpdatesFromCache } from '~/common/api';
 import dayjs from 'dayjs';
 
 export default defineEventHandler(async (event) => {
@@ -9,19 +8,18 @@ export default defineEventHandler(async (event) => {
     league: query.league,
   };
   // get the fixtures
-  let matches: any[] = await getFixtures(params);
-  // for (let i = 0; i < LEAGUES.length; i++) {
-  //   const fixtures = await getFixtures(params);
-  //   matches = [...matches, ...fixtures];
-  // }
-  return matches.map((fx: any) => ({
-    id: fx.fixture.id,
-    timestamp: fx.fixture.timestamp * 1000,
-    teams: fx.teams,
-    league: {
-      id: fx.league.id,
-      name: fx.league.name,
-      logo: fx.league.logo,
-    },
-  }));
+  const date = dayjs(Date.now()).format('YYYY-MM-DD');
+
+  return await getUpdatesFromCache(date);
+
+  // return matches.map((fx: any) => ({
+  //   id: fx.fixture.id,
+  //   timestamp: fx.fixture.timestamp * 1000,
+  //   teams: fx.teams,
+  //   league: {
+  //     id: fx.league.id,
+  //     name: fx.league.name,
+  //     logo: fx.league.logo,
+  //   },
+  // }));
 });
