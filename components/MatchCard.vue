@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // props
-
  const props = defineProps({
     leagueName:String,
     leagueLogo: String,
@@ -9,20 +8,18 @@
     awayTeam:String,
     awayLogo:String,
     id: String,
-    timestamp:Number,
-})
-const id = props.id
-const timestamp = props.timestamp
+    timestamp:Number
+});
+// console.log(props.firstGame)
+const id = props.id;
+const timestamp = props.timestamp;
 const date = new Date(timestamp);
 const day:string = date.getDate().toString().padStart(2, '0');
 const month:number = date.getMonth()+1;
 const hours:string = date.getHours().toString().padStart(2, '0');
 const minutes:string = date.getMinutes().toString().padStart(2, '0');
-console.clear();
-console.log(day,month,hours,minutes);
 // month names
-const monthNames:string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]
-
+const monthNames:string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 let showCard = ref(false);
 let advice:string;
 let underOver:number;
@@ -30,10 +27,8 @@ let goals:{home:number;away:number};
 let winner:{id:string;name:string;comment:string};
 let winnerName:string;
 let percent:{home:string;draw:string;away:string};
-// Closing the card
+// Closing and opening the card
 async function openCard() {
-
-    // advice = cardData.value[0].advice
     if (showCard.value === true) {
         showCard.value = false; 
     } else {
@@ -64,7 +59,7 @@ async function openCard() {
   }
 </script>
 <template>
-        <div class="match-card  bg-gray-100 border-gray-300 border-2 mb-2  p-5">
+        <div class="match-card  bg-gray-100 border-gray-200 border-2 mb-2  p-5">
                             <!-- Title -->
                             <div class="card-title  flex flex-row justify-between items-center border-solid border-gray-300 transition duration-300"
                                 :class="{ 'border-b-2 pb-4': showCard, 'border-b-0': !showCard }">
@@ -75,7 +70,7 @@ async function openCard() {
                                         {{ homeTeam }}
                                         <span class="ml-2"><img class="w-5" :src="homeLogo" alt=""> </span>
                                     </h2>
-                                <div class="title-time ">
+                                <div class="title-time flex flex-col items-center">
                                     <p class="date text-gray-500">{{ day+" "+monthNames[month] }}</p>
                                     <p class="time text-gray-700">{{ hours+":"+minutes }} hrs</p>
                                 </div>
@@ -90,7 +85,7 @@ async function openCard() {
                                 </button>
                             </div>
                             <!-- card content -->
-                            <div v-if="showCard"
+                            <div v-if="showCard "
                                 class="card-container flex flex-row pt-5 justify-between transition duration-300">
                                 <div class="prematch-predictions w-1/2 px-4">
                                     <h3 class="font-bold">Prematch predictions</h3>
@@ -98,24 +93,24 @@ async function openCard() {
                                     <div class="first-board board">
                                         <span
                                             class="first-board__items board-items w-1/3 rounded-l-lg border-2" 
-                                            :class="winnerName === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            :class="winnerName === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300' "
                                             >1&nbsp;Home</span><span
                                             class="first-board__items board-items border-2 "
-                                            :class="winnerName !== 'Home' && winnerName !== 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            :class="winnerName !== 'Home' && winnerName !== 'Away' ? 'bg-green-500 text-gray-100 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300' "
                                             >X&nbsp;Draw</span><span
                                             class="first-board__items board-items border-2 border-gray-300  rounded-r-lg"
-                                            :class="winnerName === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            :class="winnerName === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300'"
                                             >2&nbsp;Away</span>
                                     </div>
                                     <h4 class="text-gray-400 py-1">Type Ov/Un 1.5</h4>
                                     <div class="second-board board">
                                         <span
                                             class="second-board__items board-items  rounded-l-lg"
-                                            :class="underOver != -1.5 && underOver != 0? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            :class="underOver != -1.5 && underOver != 0? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300' "
                                             >1&nbsp;&nbsp;&nbsp;&nbsp;Ov.
                                             1.5</span><span
                                             class="second-board__items board-items rounded-r-lg "
-                                            :class="underOver == -1.5 || underOver === 0 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            :class="underOver == -1.5 || underOver === 0 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300'"
                                             >2&nbsp;&nbsp;&nbsp;&nbsp;Un.
                                             1.5</span>
                                     </div>
@@ -123,11 +118,11 @@ async function openCard() {
                                     <div class="third-board board">
                                         <span
                                             class="third-board__items board-items rounded-l-lg "
-                                            :class="underOver >= 2.5 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                            :class="underOver >= 2.5 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300' "
                                             >1&nbsp;&nbsp;&nbsp;&nbsp;Ov.
                                             2.5</span><span
                                             class="third-board__items board-items rounded-r-lg"
-                                            :class="underOver < 2.5 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            :class="underOver < 2.5 ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300'"
                                             >2&nbsp;&nbsp;&nbsp;&nbsp;Un.
                                             2.5</span>
                                     </div>
@@ -152,23 +147,23 @@ async function openCard() {
                                     <h4 class="py-2 text-gray-500">Expected Outcome</h4>
                                     <div class="expected-outcomes flex flex-row">
                                         <span class="expected-outcomes__items"
-                                        :class="winnerName === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                        :class="winnerName === 'Home' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300' "
                                         >{{ percent.home }} Home</span><span
                                             class="expected-outcomes__items"
-                                            :class="winnerName !== 'Home' && winnerName !== 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            :class="winnerName !== 'Home' && winnerName !== 'Away' ? 'bg-green-500 text-gray-100 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300'"
                                             >{{ percent.draw }} Draw</span><span
                                             class="expected-outcomes__items"
-                                            :class="winnerName === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            :class="winnerName === 'Away' ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300'"
                                             >{{ percent.away }} Away</span>
                                     </div>
                                     <!-- Expected goals -->
                                     <h4 class="py-2 text-gray-500">Expected goals</h4>
                                     <div class="expected-goals flex flex-row justify-between">
                                         <span class="expected-goals__items"
-                                        :class="goals.home >= goals.away  ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300' "
+                                        :class="goals.home >= goals.away  ? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300' "
                                         >1&nbsp;&nbsp;{{homeTeam}}&nbsp;&nbsp;Un. {{ goals.home }}</span><span
                                             class="expected-goals__items"
-                                            :class="goals.away>goals.home? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-50 text-gray-700 border-gray-300'"
+                                            :class="goals.away>goals.home? 'bg-green-500 text-gray-50 border-green-500' : 'bg-gray-100 text-gray-700 border-gray-300'"
                                             >2&nbsp;&nbsp;{{awayTeam}}&nbsp;&nbsp;Un. {{ goals.away }}</span>
                                     </div>
                                     <div class="footnote py-2">
@@ -191,7 +186,8 @@ async function openCard() {
     @apply flex flex-row justify-between items-center text-left md:text-center
 }
 .board-items{
-    @apply px-2 py-1 border-2 text-sm
+    border-width: 1px;
+    @apply px-2 py-1  text-sm
 }
 .first-board__items{
     @apply w-1/3 
@@ -221,10 +217,11 @@ async function openCard() {
     @apply bg-red-600
 }
 .expected-outcomes__items{
-    @apply w-1/3 px-2 py-1 text-center items-center border-2
+    border-width: 1px;
+    @apply w-1/3 px-2 py-1 text-center items-center 
 }
 .expected-outcomes__items:nth-child(1){
-    @apply  border-2 rounded-l-lg
+    @apply   rounded-l-lg
 }
 
 .expected-outcomes__items:nth-child(3){
@@ -232,13 +229,14 @@ async function openCard() {
 }
 
 .expected-goals__items{
+    border-width: 1px;
     @apply w-1/2 px-2 py-1
 }
 .expected-goals__items:nth-child(1){
-    @apply  border-2 rounded-l-lg
+    @apply   rounded-l-lg
 }
 .expected-goals__items:nth-child(2){
-    @apply border-2  rounded-r-lg 
+    @apply  rounded-r-lg 
 }
 .footnote .ai-note{
     @apply bg-blue-300 text-blue-600 py-1 px-2 rounded-lg
