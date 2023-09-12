@@ -29,7 +29,7 @@ const loadingFixtures = ref(true);
 const getFixtures = async (date: string, league: string) => {
   console.log('The league', league);
   const { data, pending, error } = await useFetch<any[]>(
-    '/api/updates/fixtures',
+    '/api/updates/all',
     {
       params: { date, league },
     },
