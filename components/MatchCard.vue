@@ -51,8 +51,12 @@ async function openCard() {
         console.log(cardData.value);
         console.log(underOver);
     }
-}
-
+    // console.clear();
+    showCard.value = true;
+    console.log(winner);
+    console.log(cardData.value);
+    console.log(underOver);
+  }
 </script>
 <template>
         <div class="match-card  bg-gray-100 border-gray-200 border-2 mb-2  p-5">
