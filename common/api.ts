@@ -8,14 +8,7 @@ export enum TTL {
 
 export const getFixtures = async (params: any, leagueId: number) => {
   // check for matches in the cache
-  const cache = await useStorage().getItem(
-    `redis:fixtures::${params.date}::${leagueId}`,
-  );
-  if (cache) {
-    console.log('Returning fixtures from cache');
-    // return JSON.parse(cache.toString())
-    return cache as any[];
-  }
+
   const apiCall: any = await $fetch<any>(BASE_URL + '/v3/fixtures', {
     params: {
       ...params,
@@ -27,12 +20,6 @@ export const getFixtures = async (params: any, leagueId: number) => {
   if (!apiCall.response.length) {
     return [];
   }
-  // save the data to redis
-  await useStorage().setItem(
-    `redis:fixtures::${params.date}::${leagueId}`,
-    apiCall.response,
-    { ttl: TTL.DAILY },
-  );
 
   return apiCall.response as any[];
 };
@@ -91,6 +78,14 @@ export const getFixturesArchive = async (fixtureId: string) => {
     );
   }
 };
+
+export async function updateFixtures(selectedFixtures: any[], date: string) {
+  return await useStorage().setItem(`redis:fixtures::${date}`, selectedFixtures, { ttl: TTL.WEEKLY });
+}
+
+export async function getUpdatesFromCache(date: string) {
+  return await useStorage().getItem(`redis:fixtures::${date}`) as any[];
+}
 
 export async function getPredictions(fixtureId: string) {
   const cache = await useStorage().getItem(`redis:prediction:${fixtureId}`);
