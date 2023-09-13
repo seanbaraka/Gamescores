@@ -1,17 +1,8 @@
 <script setup lang="ts">
 import MatchCard from "../components/MatchCard.vue";
 // TODO: Remove unused code
-// date for getting fixtures
-let date:string = "2023-09-03";
 // get fixtures data
-const { data: matchData, error, pending: gettingFixtures }  = await useFetch<any[]>(`/api/updates/fixtures?date=${date}`);
-
-console.clear();
-console.log('Got some data', matchData.value[0]);
-
-
-import UpdateFixtures from "~/components/UpdateFixtures.vue";
-
+const { data: matchData, error, pending: gettingFixtures }  = await useFetch<any[]>(`/api/updates/fixtures`);
 
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 

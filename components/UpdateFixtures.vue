@@ -4,20 +4,24 @@ import 'v-calendar/dist/style.css';
 import dayjs from 'dayjs';
 
 const isUpdatingFixture = ref(false);
-// const { data: leagues, error, pending } = useFetch('/api/updates/leagues');
-const search = async (q) => {
-  const leagues = await $fetch('/api/updates/leagues', { params: { q } });
 
-  return leagues
-    .map((league) => ({
-      id: league.id,
-      label: league.name,
-      prefix: league.logo,
-    }))
-    .filter(Boolean);
+const {
+  data: leagues,
+  pending: fetchingLeagues,
+  error,
+} = await useFetch('/api/updates/leagues');
+
+const search = async (q: string) => {
+  if (leagues.value) {
+    return leagues.value.filter(
+      (lg) =>
+        lg.name.toLowerCase().includes(q.toLocaleLowerCase()) ||
+        lg.country.toLowerCase().includes(q.toLocaleLowerCase()),
+    );
+  }
 };
 
-const selected = ref();
+const selected = ref({ name: 'Premier League', id: '39', country: 'England' });
 
 const date = ref(new Date());
 
@@ -30,7 +34,6 @@ const label = computed(() =>
   }),
 );
 
-const selectedFixture = ref([]);
 const fixtures = async (date?: string) => {
   const data = await $fetch(
     `/api/updates/fixtures?date=${dayjs(date).format('YYYY-MM-DD')}`,
@@ -40,8 +43,7 @@ const fixtures = async (date?: string) => {
     .filter(Boolean);
 };
 
-const formatedDate = computed(() => dayjs(Date.now()).format('YYYY-MM-DD'));
-
+const formatedDate = computed(() => dayjs(date.value).format('YYYY-MM-DD'));
 </script>
 
 <template>
@@ -60,10 +62,28 @@ const formatedDate = computed(() => dayjs(Date.now()).format('YYYY-MM-DD'));
             class="min-w-full p-4"
             v-model="selected"
             :searchable="search"
+            :options="leagues"
             id="league"
             placeholder="Search For a specific league"
+            searchable-placeholder="Type the name of the league"
+            v-if="leagues.length"
             by="id"
-          />
+          >
+            <template #label>
+              <span v-if="selected" class="truncate"
+                >{{ selected.name }} - {{ selected.country }}</span
+              >
+              <span v-else>Select League</span>
+            </template>
+            <template #option="{ option: league }">
+              <span class="truncate"
+                >{{ league.name }} - {{ league.country }}</span
+              >
+            </template>
+            <template #option-empty="{ query }">
+              <q>{{ query }}</q> not found
+            </template>
+          </USelectMenu>
         </div>
         <div class="date-selection flex-1">
           <label for="match-date" class="text-xs">Pick a match date</label>
@@ -78,7 +98,7 @@ const formatedDate = computed(() => dayjs(Date.now()).format('YYYY-MM-DD'));
         </div>
       </div>
       <div class="fixture-selection py-2">
-        <fixture-selection :date="formatedDate" />
+        <fixture-selection :date="formatedDate" :league="selected.id" />
       </div>
     </div>
   </div>
