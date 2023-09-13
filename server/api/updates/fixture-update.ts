@@ -10,7 +10,7 @@ export default defineEventHandler(async (event: H3Event) => {
   const { selectedFixtures } = await readBody(event);
   try {
     for (let f = 0; f < selectedFixtures.length; f++) {
-      await updateFixtures(selectedFixtures[f], dayjs(selectedFixtures[f].timestamp).format('YYYY-MM-DD'));
+      await updateFixtures([selectedFixtures[f]], dayjs(selectedFixtures[f].timestamp).format('YYYY-MM-DD'));
     }
     return { success: true }
   } catch (e: any) {
