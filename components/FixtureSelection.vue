@@ -5,29 +5,10 @@ import { Ref } from 'vue';
 const props = defineProps({ date: String, league: String });
 
 const fixtures: Ref<any[]> = ref([]);
-// const search = async (q) => {
-//   console.log('fetching fixtures', props.date)
-//   const fixtures = await $fetch('/api/updates/fixtures', {
-//     params: { date: props.date },
-//   });
-//   console.log('obtained', fixtures.length)
-//   return fixtures
-//     .map((fx) => ({
-//       id: fx.id,
-//       timestamp: fx.timestamp,
-//       label: fx.teams.home.name + ' vs ' + fx.teams.away.name,
-//       home: { name: fx.teams.home.name, logo: { src: fx.teams.home.logo } },
-//       away: { name: fx.teams.away.name, logo: { src: fx.teams.away.logo } },
-//       avatar: { src: fx.league.logo },
-//       suffix: fx.league,
-//     }))
-//     .filter(Boolean);
-// };
 
 const loadingFixtures = ref(true);
 
 const getFixtures = async (date: string, league: string) => {
-  console.log('The league', league);
   const { data, pending, error } = await useFetch<any[]>(
     '/api/updates/all',
     {
@@ -69,12 +50,12 @@ const recordChange = (e: any) => {
 const updatingFixtures = ref(false);
 const updateFixtures = async () => {
   // do some updating here, alright;
+  updatingFixtures.value = true;
   const { data, pending, error } = await useFetch(
     '/api/updates/fixture-update',
     {
       method: 'POST',
       body: {
-        date: props.date,
         selectedFixtures: selectedFixtures.value.map((fx) => ({
           id: fx.id,
           timestamp: fx.timestamp,
@@ -90,6 +71,7 @@ const updateFixtures = async () => {
   if (data.value) {
     updatingFixtures.value = false;
     // do something with the result that pops up.
+    selectedFixtures.value = [];
     console.log(data.value);
   }
 };
@@ -102,6 +84,7 @@ const updateFixtures = async () => {
     >
     <USelectMenu
       v-model="selected"
+      :options="fixtures"
       placeholder="Choose the desired fixtures.."
       by="id"
       @change="recordChange"
