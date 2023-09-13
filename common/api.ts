@@ -1,18 +1,17 @@
-import { BASE_URL, LEAGUES, RAPID_HEADERS } from '~/common/rapidapi';
+import { BASE_URL, RAPID_HEADERS } from '~/common/rapidapi';
 
 export enum TTL {
   DAILY = 60 * 60 * 24,
   WEEKLY = 86400 * 7,
-  MONTHLY = 604801 * 4
+  MONTHLY = 604801 * 4,
 }
 
-export const getFixtures = async (params: any, leagueId: number) => {
+export const getFixtures = async (params: any) => {
   // check for matches in the cache
 
   const apiCall: any = await $fetch<any>(BASE_URL + '/v3/fixtures', {
     params: {
       ...params,
-      league: leagueId,
       season: '2023',
     },
     headers: RAPID_HEADERS,
@@ -28,27 +27,21 @@ export const getLeagues = async () => {
   // check for matches in the cache
   const cache = await useStorage().getItem(`redis:leagues`);
   if (cache) {
-    console.log('Returning from cache');
     // return JSON.parse(cache.toString())
     return cache as any[];
   }
-  const results: any[] = [];
-  for (const leagueId of LEAGUES) {
-    const apiCall = await $fetch<any>(BASE_URL + '/v3/leagues', {
-      params: {
-        id: leagueId,
-      },
-      headers: RAPID_HEADERS,
-    });
-    const { league, country } = apiCall.response[0];
-    results.push({
-      id: league.id,
-      name: league.name,
-      logo: league.logo,
-      country: country.name,
-    });
-  }
-
+  const apiCall = await $fetch<any>(BASE_URL + '/v3/leagues', {
+    params: {
+      season: '2023',
+    },
+    headers: RAPID_HEADERS,
+  });
+  const results = apiCall.response.map((lg: any) => ({
+    id: lg.league.id,
+    name: lg.league.name,
+    logo: lg.league.logo,
+    country: lg.country.name,
+  }));
   // save the data to redis
   await useStorage().setItem(`redis:leagues`, results, { ttl: TTL.MONTHLY });
   return results;
@@ -80,11 +73,15 @@ export const getFixturesArchive = async (fixtureId: string) => {
 };
 
 export async function updateFixtures(selectedFixtures: any[], date: string) {
-  return await useStorage().setItem(`redis:fixtures::${date}`, selectedFixtures, { ttl: TTL.WEEKLY });
+  return await useStorage().setItem(
+    `redis:fixtures::${date}`,
+    selectedFixtures,
+    { ttl: TTL.WEEKLY },
+  );
 }
 
 export async function getUpdatesFromCache(date: string) {
-  return await useStorage().getItem(`redis:fixtures::${date}`) as any[];
+  return (await useStorage().getItem(`redis:fixtures::${date}`)) as any[];
 }
 
 export async function getPredictions(fixtureId: string) {
