@@ -81,7 +81,11 @@ export async function updateFixtures(selectedFixtures: any[], date: string) {
 }
 
 export async function getUpdatesFromCache(date: string) {
-  return (await useStorage().getItem(`redis:fixtures::${date}`)) as any[];
+  const fixtures = await useStorage().getItem(`redis:fixtures::${date}`) as any[];
+  if (!fixtures || !fixtures.length) {
+    return [];
+  }
+  return fixtures;
 }
 
 export async function getPredictions(fixtureId: string) {

@@ -2,11 +2,11 @@
 import MatchCard from "../components/MatchCard.vue";
 // TODO: Remove unused code
 // get fixtures data
-const { data: matchData, error, pending: gettingFixtures }  = await useFetch<any[]>(`/api/updates/fixtures`);
 
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 
 const { status, signOut } = useAuth();
+
 if (status.value !== 'authenticated') {
     navigateTo('auth')
 }
@@ -93,19 +93,18 @@ const updateCurrentFixture = (fixture: any) => {
                 <h5>Pending Matches</h5>
             </div>
             <div class="pending-matches my-4">
-                
                 <!-- matches -->
-                <div class="matches-list" v-if="matchData && matchData.length">
+                <div class="matches-list" v-if="fixtures.length">
                     <MatchCard 
-                    v-for="data in matchData" 
-                    :leagueName=data.league.name 
-                    :leagueLogo=data.league.logo
-                    :homeTeam=data.teams.home.name
-                    :homeLogo=data.teams.home.logo
-                    :awayTeam=data.teams.away.name
-                    :awayLogo=data.teams.away.logo  
-                    :id=data.id
-                    :timestamp=data.timestamp
+                    v-for="data in fixtures"
+                    :leagueName="data.league.name"
+                    :leagueLogo="data.league.logo"
+                    :homeTeam="data.teams.home.name"
+                    :homeLogo="data.teams.home.logo"
+                    :awayTeam="data.teams.away.name"
+                    :awayLogo="data.teams.away.logo"
+                    :id="data.id"
+                    :timestamp="data.timestamp"
                     />
                 </div>
             </div>
