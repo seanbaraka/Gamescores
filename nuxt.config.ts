@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ['@sidebase/nuxt-auth', 'dayjs-nuxt', '@nuxthq/ui'],
+    modules: ['@sidebase/nuxt-auth', 'dayjs-nuxt', '@nuxt/ui'],
     colorMode: {
         preference: 'light'
     },
