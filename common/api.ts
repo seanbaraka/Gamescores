@@ -73,9 +73,16 @@ export const getFixturesArchive = async (fixtureId: string) => {
 };
 
 export async function updateFixtures(selectedFixtures: any[], date: string) {
+  let allFixtures: any[] = [];
+  const fixtures = await useStorage().getItem(`redis:fixtures::${date}`) as any[];
+  if (fixtures && fixtures.length) {
+    allFixtures = [...fixtures, ...selectedFixtures]
+  } else {
+    allFixtures = selectedFixtures;
+  }
   return await useStorage().setItem(
     `redis:fixtures::${date}`,
-    selectedFixtures,
+    allFixtures,
     { ttl: TTL.WEEKLY },
   );
 }
