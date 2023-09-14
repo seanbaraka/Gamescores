@@ -100,9 +100,9 @@ const updateCurrentFixture = (fixture: any) => {
                     :leagueName="data.league.name"
                     :leagueLogo="data.league.logo"
                     :homeTeam="data.teams.home.name"
-                    :homeLogo="data.teams.home.logo"
+                    :homeLogo="data.teams.home.logo.src"
                     :awayTeam="data.teams.away.name"
-                    :awayLogo="data.teams.away.logo"
+                    :awayLogo="data.teams.away.logo.src"
                     :id="data.id"
                     :timestamp="data.timestamp"
                     />
