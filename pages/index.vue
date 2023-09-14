@@ -107,9 +107,9 @@ const updateCurrentFixture = (fixture: any) => {
                     :timestamp="data.timestamp"
                     />
                 </div>
-            </div>
-            <div class="no-matches">
-                <h2>No Pending Matches Today</h2>
+                <div class="no-matches" v-else>
+                  <h2>No Pending Matches Today</h2>
+                </div>
             </div>
             <div class="past-fixtures mt-10">
                 <h5>Past Matches</h5>
