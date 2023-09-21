@@ -133,8 +133,8 @@ export async function getPredictions(fixtureId: string) {
 
 // Get ods for a fixture
 
-export async function getOdds(fixtureId: string) {
-
+export async function getOdds(fixtureId:any) {
+  let odds:any[] = [];
   try{
     const apiCall =  await $fetch<any>(BASE_URL + '/v3/odds',{
       params:{
@@ -143,13 +143,14 @@ export async function getOdds(fixtureId: string) {
       headers:RAPID_HEADERS
     });
     if(apiCall.response){
+      odds = apiCall.response[0].bookmakers[0].bets;
       console.log('Odds for fixture',fixtureId)
-      console.log(apiCall.response)
+      console.log(odds)
     }
   }catch(e){
     console.log(e)
   }
-
+  return odds
 }
 
 // getOdds('568987');
