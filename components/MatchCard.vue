@@ -1,17 +1,30 @@
 <script setup lang="ts">
 // props
 import dayjs from 'dayjs';
+// get ods
+import {getOdds} from '@/common/api';
+interface propsTypes {
+  leagueName: string;
+  leagueLogo: string;
+  homeTeam: string;
+  homeLogo: string;
+  awayTeam: string;
+  awayLogo: string;
+  id: string;
+  timestamp: number;
+}
 
-const props = defineProps({
-  leagueName: String,
-  leagueLogo: String,
-  homeTeam: String,
-  homeLogo: String,
-  awayTeam: String,
-  awayLogo: String,
-  id: String,
-  timestamp: Number,
-});
+
+const props: propsTypes = {
+  leagueName: '',
+  leagueLogo: '',
+  homeTeam: '',
+  homeLogo: '',
+  awayTeam: '',
+  awayLogo: '',
+  id: '',
+  timestamp: 0,
+};
 // console.log(props.firstGame)
 const id = props.id;
 const timestamp = props.timestamp;
@@ -44,7 +57,7 @@ async function toggleCard() {
       home: Math.abs(Number(cardData.value.goals.home)),
       away: Math.abs(Number(cardData.value.goals.away)),
     };
-
+    getOdds(id);
     percent = cardData.value.percent;
     winner = cardData.value.winner;
     if (winner.name === props.homeTeam) {

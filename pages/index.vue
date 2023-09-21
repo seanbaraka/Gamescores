@@ -4,9 +4,9 @@ import MatchCard from "../components/MatchCard.vue";
 // get fixtures data
 
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
-
+console.log(fixtures.value)
 const { status, signOut } = useAuth();
-
+ 
 if (status.value !== 'authenticated') {
     navigateTo('auth')
 }

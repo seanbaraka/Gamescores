@@ -129,3 +129,27 @@ export async function getPredictions(fixtureId: string) {
     console.log('Could not load the predictions for the fixture', fixtureId);
   }
 }
+
+
+// Get ods for a fixture
+
+export async function getOdds(fixtureId: string) {
+
+  try{
+    const apiCall =  await $fetch<any>(BASE_URL + '/v3/odds',{
+      params:{
+        fixture:fixtureId
+      },
+      headers:RAPID_HEADERS
+    });
+    if(apiCall.response){
+      console.log('Odds for fixture',fixtureId)
+      console.log(apiCall.response)
+    }
+  }catch(e){
+    console.log(e)
+  }
+
+}
+
+// getOdds('568987');
