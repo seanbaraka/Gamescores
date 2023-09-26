@@ -8,19 +8,25 @@ export enum TTL {
 
 export const getFixtures = async (params: any) => {
   // check for matches in the cache
-
-  const apiCall: any = await $fetch<any>(BASE_URL + '/v3/fixtures', {
-    params: {
-      ...params,
-      season: '2023',
-    },
-    headers: RAPID_HEADERS,
-  });
-  if (!apiCall.response.length) {
-    return [];
+  try {
+    const apiCall: any = await $fetch<any>(BASE_URL + '/v3/fixtures', {
+      params: {
+        ...params,
+        season: '2023',
+      },
+      headers: RAPID_HEADERS,
+    });
+    if (!apiCall.response) {
+      throw new Error('Could not get any response from this side', apiCall.statusCode);
+    }
+    if (!apiCall.response.length) {
+      return [];
+    }
+    return apiCall.response as any[];
+  } catch (e: any) {
+    console.warn(e)
+    console.log('An Error occurred when fetching fixtures', e.message);
   }
-
-  return apiCall.response as any[];
 };
 
 export const getLeagues = async () => {
@@ -30,21 +36,28 @@ export const getLeagues = async () => {
     // return JSON.parse(cache.toString())
     return cache as any[];
   }
-  const apiCall = await $fetch<any>(BASE_URL + '/v3/leagues', {
-    params: {
-      season: '2023',
-    },
-    headers: RAPID_HEADERS,
-  });
-  const results = apiCall.response.map((lg: any) => ({
-    id: lg.league.id,
-    name: lg.league.name,
-    logo: lg.league.logo,
-    country: lg.country.name,
-  }));
-  // save the data to redis
-  await useStorage().setItem(`redis:leagues`, results, { ttl: TTL.MONTHLY });
-  return results;
+  try {
+    const apiCall = await $fetch<any>(BASE_URL + '/v3/leagues', {
+      params: {
+        season: '2023',
+      },
+      headers: RAPID_HEADERS,
+    });
+    if (!apiCall.response) {
+      throw new Error('Could not get any response from this side', apiCall.statusCode);
+    }
+    const results = apiCall.response.map((lg: any) => ({
+      id: lg.league.id,
+      name: lg.league.name,
+      logo: lg.league.logo,
+      country: lg.country.name,
+    }));
+    // save the data to redis
+    await useStorage().setItem(`redis:leagues`, results, { ttl: TTL.MONTHLY });
+    return results;
+  } catch (e: any) {
+    console.log('An Error Occurred when fetching leagues', e.message);
+  }
 };
 
 export const getFixturesArchive = async (fixtureId: string) => {
@@ -74,21 +87,23 @@ export const getFixturesArchive = async (fixtureId: string) => {
 
 export async function updateFixtures(selectedFixtures: any[], date: string) {
   let allFixtures: any[] = [];
-  const fixtures = await useStorage().getItem(`redis:fixtures::${date}`) as any[];
+  const fixtures = (await useStorage().getItem(
+    `redis:fixtures::${date}`,
+  )) as any[];
   if (fixtures && fixtures.length) {
-    allFixtures = [...fixtures, ...selectedFixtures]
+    allFixtures = [...fixtures, ...selectedFixtures];
   } else {
     allFixtures = selectedFixtures;
   }
-  return await useStorage().setItem(
-    `redis:fixtures::${date}`,
-    allFixtures,
-    { ttl: TTL.WEEKLY },
-  );
+  return await useStorage().setItem(`redis:fixtures::${date}`, allFixtures, {
+    ttl: TTL.WEEKLY,
+  });
 }
 
 export async function getUpdatesFromCache(date: string) {
-  const fixtures = await useStorage().getItem(`redis:fixtures::${date}`) as any[];
+  const fixtures = (await useStorage().getItem(
+    `redis:fixtures::${date}`,
+  )) as any[];
   if (!fixtures || !fixtures.length) {
     return [];
   }
@@ -130,35 +145,25 @@ export async function getPredictions(fixtureId: string) {
   }
 }
 
-
 // Get ods for a fixture
 
 export async function getOdds(fixtureId:any) {
   let odds:any[] = [];
-  // TODO: Cache the odds
-  const cache = await useStorage().getItem(`redis:odds:${fixtureId}`) as any[];
-  if(cache && cache.length){
-    // console.log('Odds from cache')
-   return odds = cache;
-  }else{
-    // console.log('Odds from API')
-    try{
-      const apiCall =  await $fetch<any>(BASE_URL + '/v3/odds',{
+  try{
+    const apiCall =  await $fetch<any>(BASE_URL + '/v3/odds',{
       params:{
         fixture:fixtureId
       },
-      headers:RAPID_HEADERS
+      headers: RAPID_HEADERS,
     });
-    if(apiCall.response){
+    if (apiCall.response) {
       odds = apiCall.response[0].bookmakers[0].bets;
-      console.log('Odds for fixture',fixtureId)
-      console.log(odds)
+      await useStorage().setItem(`redis:odds::${fixtureId}`, odds);
     }
-  }catch(e){
-    console.log(e)
+  } catch (e: any) {
+    console.log('An error occurred while fetching a matches odds', e.message);
   }
-  return odds
-}
+  return odds;
 }
 
 // getOdds('568987');

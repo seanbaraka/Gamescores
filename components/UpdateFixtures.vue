@@ -48,18 +48,18 @@ const formatedDate = computed(() => dayjs(date.value).format('YYYY-MM-DD'));
 
 <template>
   <div class="right-bar overflow-auto flex-1 min-h-[90vh]">
-    <div class="fixture-form bg-gray-50 rounded-xl p-4">
+    <div class="fixture-form dark:bg-gray-800 bg-gray-50 rounded-xl p-4">
       <h2
-        class="form-header p-2 text-xl border-b-[1px] font-semibold"
+        class="form-header p-2 text-xl dark:border-gray-500 border-b-[1px] font-semibold"
         v-if="!isUpdatingFixture"
       >
         Update Today's Fixtures
       </h2>
-      <div class="league-date-selection flex gap-4">
+      <div class="league-date-selection flex gap-4 py-4">
         <div class="league-selection flex-1 bg-transparent">
           <label for="league" class="text-xs">Choose A League</label>
           <USelectMenu
-            class="min-w-full p-4"
+            class="min-w-full"
             v-model="selected"
             :searchable="search"
             :options="leagues"
