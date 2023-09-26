@@ -135,8 +135,15 @@ export async function getPredictions(fixtureId: string) {
 
 export async function getOdds(fixtureId:any) {
   let odds:any[] = [];
-  try{
-    const apiCall =  await $fetch<any>(BASE_URL + '/v3/odds',{
+  // TODO: Cache the odds
+  const cache = await useStorage().getItem(`redis:odds:${fixtureId}`) as any[];
+  if(cache && cache.length){
+    // console.log('Odds from cache')
+   return odds = cache;
+  }else{
+    // console.log('Odds from API')
+    try{
+      const apiCall =  await $fetch<any>(BASE_URL + '/v3/odds',{
       params:{
         fixture:fixtureId
       },
@@ -151,6 +158,7 @@ export async function getOdds(fixtureId:any) {
     console.log(e)
   }
   return odds
+}
 }
 
 // getOdds('568987');

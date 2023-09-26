@@ -52,7 +52,7 @@ async function toggleCard() {
     } = await useFetch<any>(`/api/updates/predictions?fixture=${id}`);
     // Odds
     const bets = await useFetch<any>(`/api/updates/odds?fixture=${id}`);
-    console.log(bets.data.value);
+    // console.log(bets.data.value);
     matchWinner = {
       home: bets.data.value[0].values[0].odd,
       draw: bets.data.value[0].values[1].odd,

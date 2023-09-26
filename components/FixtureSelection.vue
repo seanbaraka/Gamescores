@@ -74,8 +74,6 @@ const updateFixtures = async () => {
     selectedFixtures.value = [];
     console.log(data.value);
   }
-  // reload the component
-  this.$nuxt.refresh();
 };
 </script>
 
