@@ -82,8 +82,8 @@ const updateCurrentFixture = (fixture: any) => {
 <template>
     <section class="h-screen overflow-hidden flex flex-col lg:flex-row">
         <div class="left-bar flex-1 h-screen  overflow-scroll  px-10">
-            <div class="mb-10 top-navigation flex w-[100%] justify-between items-center sticky top-0 bg-white py-6 z-10">
-                <Logo />
+            <div class="mb-10 top-navigation bg-transparent backdrop-blur flex w-[100%] justify-between items-center sticky top-0 py-6 z-10">
+                <h2 class="text-2xl font-semibold">Game<span class="font-light">scores</span></h2>
                 <NuxtLink class="nav-link" to="/">Matches</NuxtLink>
                 <NuxtLink to="/members" class="nav-link">Members</NuxtLink>
                 <NuxtLink @click="signOut()" class="nav-link cursor-pointer text-red-500 font-semibold">Logout</NuxtLink>

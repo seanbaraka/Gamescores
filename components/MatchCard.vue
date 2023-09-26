@@ -87,10 +87,10 @@ async function toggleCard() {
 }
 </script>
 <template>
-  <div class="match-card rounded-2xl bg-gray-50 border-gray-100 border-2 mb-2 py-2 px-4">
+  <div class="match-card rounded-2xl dark:bg-gray-800 dark:border-none bg-gray-50 border-gray-100 border-2 mb-2 py-2 px-4">
     <!-- Title -->
     <div class="grid grid-cols-12 gap-2 items-center justify-between"
-      :class="{ 'border-b-[1px] pb-4': showCard, 'border-b-0': !showCard }">
+      :class="{ 'dark:border-gray-500 border-b-[1px] pb-2': showCard, 'border-b-0': !showCard }">
       <div class="flex items-center gap-1 col-span-2">
         <img class="w-5 h-5" :src="leagueLogo" alt="" />
         <p class="text-xs">{{ leagueName }}</p>
@@ -120,7 +120,7 @@ async function toggleCard() {
       </button>
     </div>
     <!-- card content -->
-    <div v-if="showCard" class="card-container pt-2 text-xs justify-between transition duration-300">
+    <div v-if="showCard" class="card-container pt-4 text-xs justify-between transition duration-300">
       <div class="stats-box flex" v-if="statsLoaded">
         <div class="pre-match-predictions w-1/2">
           <h3 class="text-sm font-medium">Prematch predictions</h3>
@@ -128,37 +128,37 @@ async function toggleCard() {
           <div class="board grid-cols-3">
             <span class="rounded-l-lg border-[1px] p-1.5 text-center" :class="winnerName === 'Home'
                 ? 'bg-green-500 text-gray-50 border-green-500'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
               ">1&nbsp;Home {{ matchWinner.home }}</span>
             <span class="board-items" :class="winnerName !== 'Home' && winnerName !== 'Away'
                 ? 'bg-green-500 text-gray-100 border-green-500'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
               ">X&nbsp;Draw {{ matchWinner.draw }}</span>
             <span class="border-[1px] text-center p-1.5 border-gray-300 rounded-r-lg" :class="winnerName === 'Away'
                 ? 'bg-green-500 text-gray-50 border-green-500'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
               ">2&nbsp;Away {{ matchWinner.away }}</span>
           </div>
           <h4 class="text-gray-400 mt-2 py-1">Type Ov/Un 1.5</h4>
           <div class="board grid-cols-2">
             <span class="board-items rounded-l-lg" :class="underOver != -1.5 && underOver != 0
                 ? 'bg-green-500 text-gray-50 border-green-500'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
               ">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 1.5 {{ underOverOdds.over15 }}</span><span class="second-board__items board-items rounded-r-lg"
               :class="underOver == -1.5 || underOver === 0
                   ? 'bg-green-500 text-gray-50 border-green-500'
-                  : 'bg-gray-100 text-gray-700 border-gray-300'
+                  : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
                 ">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 1.5 {{ underOverOdds.under15 }}</span>
           </div>
           <h4 class="text-gray-500 mt-2 py-1">Type Ov/Un 2.5</h4>
           <div class="board grid-cols-2">
             <span class="third-board__items board-items rounded-l-lg" :class="underOver >= 2.5
                 ? 'bg-green-500 text-gray-50 border-green-500'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
               ">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 2.5 {{ underOverOdds.over25 }}</span><span class="third-board__items board-items rounded-r-lg"
               :class="underOver < 2.5
                   ? 'bg-green-500 text-gray-50 border-green-500'
-                  : 'bg-gray-100 text-gray-700 border-gray-300'
+                  : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
                 ">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 2.5 {{ underOverOdds.under25 }}</span>
           </div>
         </div>
@@ -187,15 +187,15 @@ async function toggleCard() {
           <div class="board grid-cols-3">
             <span class="board-items rounded-l-lg" :class="winnerName === 'Home'
                 ? 'bg-green-500 text-gray-50 border-green-500'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
               ">{{ percent.home }} Home</span>
             <span class="board-items" :class="winnerName !== 'Home' && winnerName !== 'Away'
                 ? 'bg-green-500 text-gray-100 border-green-500'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-gray-100 dark:border-l-gray-400 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
               ">{{ percent.draw }} Draw</span>
             <span class="board-items rounded-r-lg" :class="winnerName === 'Away'
                 ? 'bg-green-500 text-gray-50 border-green-500'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
               ">{{ percent.away }} Away</span>
 
           </div>
@@ -205,10 +205,10 @@ async function toggleCard() {
           <div class="board grid-cols-2">
             <span class="board-items rounded-l-lg" :class="goals.home >= goals.away
                 ? 'bg-green-500 text-gray-50 border-green-500'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
               ">1 Home Un. {{ goals.home }}</span><span class="board-items rounded-r-lg" :class="goals.away > goals.home
       ? 'bg-green-500 text-gray-50 border-green-500'
-      : 'bg-gray-100 text-gray-700 border-gray-300'
+      : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
     ">2 Away Un. {{ goals.away }}</span>
           </div>
 
