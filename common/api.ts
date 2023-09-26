@@ -147,12 +147,16 @@ export async function getPredictions(fixtureId: string) {
 
 // Get ods for a fixture
 
-export async function getOdds(fixtureId:any) {
-  let odds:any[] = [];
-  try{
-    const apiCall =  await $fetch<any>(BASE_URL + '/v3/odds',{
-      params:{
-        fixture:fixtureId
+export async function getOdds(fixtureId: any) {
+  let odds: any[] = [];
+  const cache = await useStorage().getItem(`redis:odds::${fixtureId}`);
+  if (cache) {
+    return cache as any[];
+  }
+  try {
+    const apiCall = await $fetch<any>(BASE_URL + '/v3/odds', {
+      params: {
+        fixture: fixtureId,
       },
       headers: RAPID_HEADERS,
     });
