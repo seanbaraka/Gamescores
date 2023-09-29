@@ -17,21 +17,24 @@ export const getFixtures = async (params: any) => {
       headers: RAPID_HEADERS,
     });
     if (!apiCall.response) {
-      throw new Error('Could not get any response from this side', apiCall.statusCode);
+      throw new Error(
+        'Could not get any response from this side',
+        apiCall.statusCode,
+      );
     }
     if (!apiCall.response.length) {
       return [];
     }
     return apiCall.response as any[];
   } catch (e: any) {
-    console.warn(e)
+    console.warn(e);
     console.log('An Error occurred when fetching fixtures', e.message);
   }
 };
 
 export const getLeagues = async () => {
   // check for matches in the cache
-  const cache = await useStorage().getItem(`redis:leagues`);
+  const cache = await useStorage().getItem(`redis:fixtures`);
   if (cache) {
     // return JSON.parse(cache.toString())
     return cache as any[];
@@ -44,7 +47,10 @@ export const getLeagues = async () => {
       headers: RAPID_HEADERS,
     });
     if (!apiCall.response) {
-      throw new Error('Could not get any response from this side', apiCall.statusCode);
+      throw new Error(
+        'Could not get any response from this side',
+        apiCall.statusCode,
+      );
     }
     const results = apiCall.response.map((lg: any) => ({
       id: lg.league.id,
@@ -171,3 +177,55 @@ export async function getOdds(fixtureId: any) {
 }
 
 // getOdds('568987');
+
+//TODO: get past fixtures by passing fixtures from redis
+export async function getPastFixtures() {
+  try {
+    let cachedFixtures = await useStorage().getItem('redis:fixtures::*')
+    if(cachedFixtures){
+      console.log('Cached fixtures', cachedFixtures)
+    }else{
+      console.log('No cached fixtures');
+    }
+  } catch (error) {
+    console.log('An error occurred while fetching cached fixtures', error);
+  }
+  let pastFixtures: any[] = [];
+  try {
+    const apiCall = await $fetch<any>(BASE_URL + '/v3/fixtures', {
+      params: {
+        last: 10,
+      },
+      headers: RAPID_HEADERS,
+    });
+    if (apiCall.response) {
+      pastFixtures = apiCall.response;
+    }
+  } catch (e: any) {
+    console.log('An error occurred while fetching past fixtures', e.message);
+  }
+  return pastFixtures;
+}
+
+export async function getLastFiveMatches(teamId: number) {
+  let getLastFiveMatches: number[] = [];
+  try {
+    const apiCall = await $fetch<any>(BASE_URL + '/v3/fixtures', {
+      params: {
+        team: teamId,
+        last: 5,
+      },
+      headers: RAPID_HEADERS,
+    });
+    if (apiCall.response) {
+      getLastFiveMatches = apiCall.response;
+      console.log('Last five matches', getLastFiveMatches);
+    }
+  } catch (e: any) {
+    console.log(
+      'An error occurred while fetching last five matches',
+      e.message,
+    );
+  }
+  return getLastFiveMatches;
+}
