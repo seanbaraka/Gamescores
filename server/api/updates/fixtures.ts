@@ -1,4 +1,4 @@
-import { getUpdatesFromCache } from '~/common/api';
+import { getUpdatesFromCache} from '~/common/api';
 import dayjs from 'dayjs';
 
 export default defineEventHandler(async (event) => {
@@ -23,3 +23,4 @@ export default defineEventHandler(async (event) => {
   //   },
   // }));
 });
+

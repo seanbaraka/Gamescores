@@ -2,23 +2,25 @@
 import MatchCard from "../components/MatchCard.vue";
 // TODO: Remove unused code
 // get fixtures data
-
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
-console.log(fixtures.value)
+// console.log(fixtures.value)
+// get past fixtures
+const { data: pastFixtures } = useFetch('/api/updates/past-fixtures');
+console.log(pastFixtures.value)
 const { status, signOut } = useAuth();
  
 if (status.value !== 'authenticated') {
     navigateTo('auth')
 }
 
-const pastFixtures = ref([
-    { home: "Arsenal", away: "Brigton Albion & Hove", correct: true, prediction: "Home Win", premium: false, odds: 1.23 },
-    { home: "Manchester City", away: "Chelsea", correct: false, prediction: "Home Win", premium: true, odds: 1.56 },
-    { home: "Man Utd", away: "Everton", correct: false, prediction: "Home Win", premium: false, odds: 1.23 },
-    { home: "Liverpool F.C", away: "Southampton F.C", correct: true, prediction: "Home Win", premium: true, odds: 1.56 },
-    { home: "Arsenal", away: "Brigton Albion & Hove", correct: true, prediction: "Home Win", premium: false, odds: 1.23 },
-    { home: "Manchester City", away: "Chelsea", correct: false, prediction: "Home Win", premium: true, odds: 1.56 },
-]);
+// const pastFixtures = ref([
+//     { home: "Arsenal", away: "Brigton Albion & Hove", correct: true, prediction: "Home Win", premium: false, odds: 1.23 },
+//     { home: "Manchester City", away: "Chelsea", correct: false, prediction: "Home Win", premium: true, odds: 1.56 },
+//     { home: "Man Utd", away: "Everton", correct: false, prediction: "Home Win", premium: false, odds: 1.23 },
+//     { home: "Liverpool F.C", away: "Southampton F.C", correct: true, prediction: "Home Win", premium: true, odds: 1.56 },
+//     { home: "Arsenal", away: "Brigton Albion & Hove", correct: true, prediction: "Home Win", premium: false, odds: 1.23 },
+//     { home: "Manchester City", away: "Chelsea", correct: false, prediction: "Home Win", premium: true, odds: 1.56 },
+// ]);
 
 const matchResults = [
     { key: 'Home Win' },

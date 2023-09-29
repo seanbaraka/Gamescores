@@ -28,7 +28,6 @@ const props: propsTypes = defineProps({
 
 // console.log(props.firstGame)
 const id = props.id;
-// console.log('id',id);
 const timestamp = props.timestamp;
 
 let showCard = ref(false);
@@ -37,6 +36,7 @@ let underOver: number;
 let goals: { home: number; away: number };
 let winner: { id: string; name: string; comment: string };
 let winnerName: string;
+
 let percent: { home: string; draw: string; away: string };
 let matchWinner: { home: string; draw: string; away: string }
 let underOverOdds:{under15: string; over15: string; over25: string; under25: string; }
@@ -52,7 +52,12 @@ async function toggleCard() {
     } = await useFetch<any>(`/api/updates/predictions?fixture=${id}`);
     // Odds
     const bets = await useFetch<any>(`/api/updates/odds?fixture=${id}`);
-    console.log(bets.data.value);
+    // last five matches
+    // console.log(bets.data.value);
+    percent = cardData.value.percent;
+    winner = cardData.value.winner;
+    // last five matches
+    const homeLastFiveMatches = await useFetch<any>(`api/updates/last-five-matches?team=${winner.id}`);
     matchWinner = {
       home: bets.data.value[0].values[0].odd,
       draw: bets.data.value[0].values[1].odd,
@@ -74,8 +79,8 @@ async function toggleCard() {
       home: Math.abs(Number(cardData.value.goals.home)),
       away: Math.abs(Number(cardData.value.goals.away)),
     };
-    percent = cardData.value.percent;
-    winner = cardData.value.winner;
+    // console.log('winner',winner)
+    // console.log('cardData', cardData);
     if (winner.name === props.homeTeam) {
       winnerName = 'Home';
     } else if (winner.name === props.awayTeam) {
@@ -83,6 +88,7 @@ async function toggleCard() {
     } else {
       winnerName = 'Draw';
     }
+    console.log('last five matches',homeLastFiveMatches.data.value);
   }
 }
 </script>
@@ -166,8 +172,9 @@ async function toggleCard() {
           <!-- last five matches -->
           <h4 class="text-gray-500 text-xs">Last 5 matches</h4>
           <div class="last-five-matches flex gap-4 justify-between my-1">
-            <div class="grid grid-cols-5">
-              <span class="results won">W</span>
+            <div class="grid grid-cols-5" v-if="homeLastFiveMatches">
+              <span v-for="results in homeLastFiveMatches" 
+               class="results won">W</span>
               <span class="results won">W</span>
               <span class="results won">W</span>
               <span class="results draw">D</span>

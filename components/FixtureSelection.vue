@@ -72,10 +72,8 @@ const updateFixtures = async () => {
     updatingFixtures.value = false;
     // do something with the result that pops up.
     selectedFixtures.value = [];
-    console.log(data.value);
+    console.log('successfully updated fixture',data.value);
   }
-  // reload the component
-  this.$nuxt.refresh();
 };
 </script>
 
