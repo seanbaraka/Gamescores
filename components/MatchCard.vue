@@ -50,6 +50,8 @@ async function toggleCard() {
       error,
       pending: gettingData,
     } = await useFetch<any>(`/api/updates/predictions?fixture=${id}`);
+    console.clear();
+    console.log(cardData);
     // Odds
     const bets = await useFetch<any>(`/api/updates/odds?fixture=${id}`);
     // last five matches
@@ -57,7 +59,6 @@ async function toggleCard() {
     percent = cardData.value.percent;
     winner = cardData.value.winner;
     // last five matches
-    const homeLastFiveMatches = await useFetch<any>(`api/updates/last-five-matches?team=${winner.id}`);
     matchWinner = {
       home: bets.data.value[0].values[0].odd,
       draw: bets.data.value[0].values[1].odd,
@@ -88,7 +89,6 @@ async function toggleCard() {
     } else {
       winnerName = 'Draw';
     }
-    console.log('last five matches',homeLastFiveMatches.data.value);
   }
 }
 </script>
@@ -172,8 +172,8 @@ async function toggleCard() {
           <!-- last five matches -->
           <h4 class="text-gray-500 text-xs">Last 5 matches</h4>
           <div class="last-five-matches flex gap-4 justify-between my-1">
-            <div class="grid grid-cols-5" v-if="homeLastFiveMatches">
-              <span v-for="results in homeLastFiveMatches" 
+            <div class="grid grid-cols-5">
+              <span  
                class="results won">W</span>
               <span class="results won">W</span>
               <span class="results won">W</span>
