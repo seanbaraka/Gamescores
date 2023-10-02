@@ -222,26 +222,5 @@ export async function getPastFixtures() {
   return pastFixtures;
 }
 
-async function getLastFiveMatches(teamId: number) {
-  let getLastFiveMatches: any[] = [];
-  try {
-    const apiCall = await $fetch<any>(BASE_URL + '/v3/fixtures', {
-      params: {
-        team: teamId,
-        last: 5,
-      },
-      headers: RAPID_HEADERS,
-    });
-    if (apiCall.response) {
-      getLastFiveMatches = apiCall.response;
-      console.log('Last five matches', getLastFiveMatches);
-    }
-  } catch (e: any) {
-    console.log(
-      'An error occurred while fetching last five matches',
-      e.message,
-    );
-  }
-  return getLastFiveMatches;
-}
+
 

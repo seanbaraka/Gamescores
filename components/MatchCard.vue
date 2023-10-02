@@ -36,7 +36,7 @@ let underOver: number;
 let goals: { home: number; away: number };
 let winner: { id: string; name: string; comment: string };
 let winnerName: string;
-
+let lastFiveMatches: { home: string; away: string };
 let percent: { home: string; draw: string; away: string };
 let matchWinner: { home: string; draw: string; away: string }
 let underOverOdds:{under15: string; over15: string; over25: string; under25: string; }
@@ -50,15 +50,13 @@ async function toggleCard() {
       error,
       pending: gettingData,
     } = await useFetch<any>(`/api/updates/predictions?fixture=${id}`);
-    console.clear();
-    console.log(cardData);
+    // console.clear();
     // Odds
     const bets = await useFetch<any>(`/api/updates/odds?fixture=${id}`);
-    // last five matches
-    // console.log(bets.data.value);
     percent = cardData.value.percent;
     winner = cardData.value.winner;
-    // last five matches
+    lastFiveMatches = cardData.value.lastFiveMatches;
+    // console.log("home:",lastFiveMatches.home,"away:",lastFiveMatches.away)
     matchWinner = {
       home: bets.data.value[0].values[0].odd,
       draw: bets.data.value[0].values[1].odd,
@@ -173,19 +171,19 @@ async function toggleCard() {
           <h4 class="text-gray-500 text-xs">Last 5 matches</h4>
           <div class="last-five-matches flex gap-4 justify-between my-1">
             <div class="grid grid-cols-5">
-              <span  
-               class="results won">W</span>
-              <span class="results won">W</span>
-              <span class="results won">W</span>
-              <span class="results draw">D</span>
-              <span class="results won">W</span>
+              <span
+              :class="lastFiveMatches.home[i-1]== 'W'? 'won': lastFiveMatches.home[i-1]== 'D'? 'draw': 'lost'"
+               v-for="i in 5" :key="i" 
+               class="results">{{ lastFiveMatches.home[i-1] }}</span>
             </div>
             <div class="grid grid-cols-5">
-              <span class="results won">W</span>
-              <span class="results won">W</span>
-              <span class="results draw">D</span>
-              <span class="results lost">L</span>
-              <span class="results lost">L</span>
+              <span
+              v-for="i in 5" :key="i"
+              :class="lastFiveMatches.away[i-1]== 'W'? 'won': lastFiveMatches.away[i-1]== 'D'? 'draw': 'lost'"
+              class="results">
+              {{ lastFiveMatches.away[i-1]}}
+            </span>
+
             </div>
           </div>
 
