@@ -122,6 +122,8 @@ export async function getPredictions(fixtureId: string) {
     console.log(`Fixture ${fixtureId} cache result`);
     return cache as any[];
   }
+  // delete the cache
+  // useStorage().removeItem(`redis:prediction:${fixtureId}`);
 
   try {
     const apiCall = await $fetch<any>(BASE_URL + '/v3/predictions', {
@@ -133,14 +135,27 @@ export async function getPredictions(fixtureId: string) {
     if (apiCall.response) {
       const { winner, win_or_draw, under_over, goals, advice, percent } =
         apiCall.response[0].predictions;
+        // last five matches
+        const lastFiveMatches:{home:string;away:string} = {home:apiCall.response[0].teams.home.league.form,away:apiCall.response[0].teams.away.league.form};
       const h2h = apiCall.response[0].h2h;
-      const resp = {
+      interface respTypes{
+        winner:object,
+        underOver:string,
+        goals:object,
+        advice:string,
+        percent:object,
+        lastFiveMatches:object,
+      }
+      let resp:respTypes = {
         winner,
         underOver: under_over,
         goals,
         advice,
         percent,
-      };
+        lastFiveMatches
+      };    
+
+      // save the data to redis
       await useStorage().setItem(`redis:prediction:${fixtureId}`, resp, {
         ttl: TTL.WEEKLY,
       });
@@ -207,8 +222,8 @@ export async function getPastFixtures() {
   return pastFixtures;
 }
 
-export async function getLastFiveMatches(teamId: number) {
-  let getLastFiveMatches: number[] = [];
+async function getLastFiveMatches(teamId: number) {
+  let getLastFiveMatches: any[] = [];
   try {
     const apiCall = await $fetch<any>(BASE_URL + '/v3/fixtures', {
       params: {
@@ -229,3 +244,4 @@ export async function getLastFiveMatches(teamId: number) {
   }
   return getLastFiveMatches;
 }
+
