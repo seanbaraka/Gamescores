@@ -196,9 +196,10 @@ export async function getOdds(fixtureId: any) {
 //TODO: get past fixtures by passing fixtures from redis
 export async function getPastFixtures() {
   try {
-    let cachedFixtures = await useStorage().getItem('redis:fixtures::*')
+    // get all cached fixtures
+    let cachedFixtures = await useStorage().getItem('redis:fixtures:*')
     if(cachedFixtures){
-      console.log('Cached fixtures', cachedFixtures)
+      console.log('Cached fixture', cachedFixtures)
     }else{
       console.log('No cached fixtures');
     }
@@ -220,7 +221,6 @@ export async function getPastFixtures() {
     console.log('An error occurred while fetching past fixtures', e.message);
   }
   return pastFixtures;
-}
-
+} 
 
 
