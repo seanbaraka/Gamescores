@@ -171,7 +171,6 @@ async function toggleCard() {
           <h4 class="text-gray-500 text-xs">Last 5 matches</h4>
           <div class="last-five-matches flex gap-4 justify-between my-1">
             <div class="grid grid-cols-5">
-              <!-- TODO: Fallback if matches are not enough -->
               <span
               :class="lastFiveMatches.home[i-1]== 'W'? 'won': lastFiveMatches.home[i-1]== 'D'? 'draw': lastFiveMatches.home[i-1]== 'L'? 'lost': 'bg-gray-200'"
                v-for="i in 5" :key="i" 
