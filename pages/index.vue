@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import MatchCard from "../components/MatchCard.vue";
+import dayjs from "dayjs";
 // TODO: Remove unused code
 // get fixtures data
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 // console.log(fixtures.value)
 // get past fixtures
+// TODO: Display past fixtures
 const { data: pastFixtures } = useFetch('/api/updates/past-fixtures');
-console.log(pastFixtures.value)
+console.log(pastFixtures)
 const { status, signOut } = useAuth();
  
 if (status.value !== 'authenticated') {
@@ -119,7 +121,7 @@ const updateCurrentFixture = (fixture: any) => {
                     <div class="flex justify-between my-2 items-center text-sm px-4 py-[.75em] border rounded-lg"
                         v-for="fixture of pastFixtures"
                         :class="[fixture.correct ? 'bg-[#F8F8F8] border-[#4A7856] text-green-700' : 'bg-[#FFF5F9] text-[#FF4684] border-[#FFC8DA]']">
-                        <p>12/05/2023</p>
+                        <p></p>
                         <p>{{ fixture.home }}</p>
                         <p>vs</p>
                         <p>{{ fixture.away }}</p>

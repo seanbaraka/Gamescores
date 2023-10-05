@@ -1,4 +1,5 @@
 import { BASE_URL, RAPID_HEADERS } from '~/common/rapidapi';
+import pastFixtures from '~/server/api/updates/past-fixtures';
 
 export enum TTL {
   DAILY = 60 * 60 * 24,
@@ -101,10 +102,23 @@ export async function updateFixtures(selectedFixtures: any[], date: string) {
   } else {
     allFixtures = selectedFixtures;
   }
+  console.log('All fixtures', allFixtures);
   return await useStorage().setItem(`redis:fixtures::${date}`, allFixtures, {
     ttl: TTL.WEEKLY,
   });
 }
+
+//  [                                                                                                16:52:43
+//   {
+//     id: 1126352,
+//     timestamp: 1696524300000,
+//     teams: { home: [Object], away: [Object] },
+//     league: {
+//       id: 3,
+//       name: 'UEFA Europa League',
+//       logo: 'https://media-4.api-sports.io/football/leagues/3.png'
+//     }
+//   }]
 
 export async function getUpdatesFromCache(date: string) {
   const fixtures = (await useStorage().getItem(
@@ -193,32 +207,30 @@ export async function getOdds(fixtureId: any) {
 
 // getOdds('568987');
 
-//TODO: get past fixtures by passing fixtures from redis
 export async function getPastFixtures() {
+  let pastFixtures:any[]=[];
   try {
     // get all cached fixtures
-    let cachedFixtures = await useStorage().getItem('redis:fixtures:*')
+    let cachedFixtures = await useStorage().getKeys('redis:fixtures');
+    console.clear();
+    let fixtureDates: string[] = [];
     if(cachedFixtures){
-      console.log('Cached fixture', cachedFixtures)
+      // for loop to store all dates in one array
+      for (let i = 0; i < cachedFixtures.length; i++) {
+        fixtureDates.push(cachedFixtures[i].split(':')[2]);
+      }
+      // loop through all dates and get fixtures
+      for(let i=0;i<fixtureDates.length;i++){
+         pastFixtures.push((await useStorage().getItem(
+          `redis:fixtures::${fixtureDates[i]}`
+        )) as any[]);
+      }
+      console.log('fixtures',pastFixtures);
     }else{
       console.log('No cached fixtures');
     }
   } catch (error) {
     console.log('An error occurred while fetching cached fixtures', error);
-  }
-  let pastFixtures: any[] = [];
-  try {
-    const apiCall = await $fetch<any>(BASE_URL + '/v3/fixtures', {
-      params: {
-        last: 10,
-      },
-      headers: RAPID_HEADERS,
-    });
-    if (apiCall.response) {
-      pastFixtures = apiCall.response;
-    }
-  } catch (e: any) {
-    console.log('An error occurred while fetching past fixtures', e.message);
   }
   return pastFixtures;
 } 
