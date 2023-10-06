@@ -1,7 +1,5 @@
 import { BASE_URL, RAPID_HEADERS } from '~/common/rapidapi';
-import pastFixtures from '~/server/api/updates/past-fixtures';
 
-// todo: Learn about enums
 export enum TTL {
   DAILY = 60 * 60 * 24,
   WEEKLY = 86400 * 7,
@@ -214,12 +212,11 @@ export async function getPastFixtures() {
         fixtureDates.push(cachedFixtures[i].split(':')[2]);
       }
       // loop through all dates and get fixtures
-      for(let i=0;i<fixtureDates.length;i++){
-        let pastFixture = (await useStorage().getItem(`redis:fixtures::${fixtureDates[i]}`)) as any[];
-        // pastFixtures = [...pastFixtures,...pastFixture];
+      for(const fixtureDate of fixtureDates){
+        let pastFixture = (await useStorage().getItem(`redis:fixtures::${fixtureDate}`)) as any[];
         // loop through all fixtures and get their ids
-        for(let j=0;j<pastFixture.length;j++){
-          pastFixturesIds = [...pastFixturesIds,pastFixture[j].id];
+        for(const fixture of pastFixture){
+          pastFixturesIds = [...pastFixturesIds,fixture.id];
         }
       }
       // turn pastFixtureIds into a string of maximum 20 ids because of the api limit

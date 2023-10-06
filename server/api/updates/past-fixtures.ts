@@ -6,5 +6,6 @@ export default defineEventHandler(async () => {
     date:fx.fixture.date,
     goals:fx.goals,
     teams:fx.teams,
+    league:fx.league,
   }));
 });

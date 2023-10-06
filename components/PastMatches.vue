@@ -1,17 +1,26 @@
-<script>
+<script setup lang="ts">
+
+const props = defineProps({
+    fixture: Object
+})
 </script>
 <template>
-        <div class="flex justify-between my-2 items-center text-sm px-4 py-[.75em] border rounded-lg"
-                            :class="[fixture.correct ? 'bg-[#F8F8F8] border-[#4A7856] text-green-700' : 'bg-[#FFF5F9] text-[#FF4684] border-[#FFC8DA]']">
-                            <p></p>
-                            <p>{{ fixture.teams.home.name }}</p>
-                            <p>vs</p>
-                            <p>{{ fixture.teams.away.name }}</p>
-                            <span v-if="fixture.correct">
-                            <img src="@/assets/img/check-badge.svg" alt="">
-                        </span>
-                        <p>{{ fixture.prediction }}</p>
-                        <p>{{ fixture.odds }}</p>
+        <div class="flex justify-between my-2 items-center text-sm px-4 py-[.75em] border rounded-lg bg-gray-50 border-green-500 text-green-500"
+                            >
+                            <span class="flex flex-row justify-around">
+                                <img class="w-5 h-5" :src="fixture.league.logo" alt="gamescores">
+                                <p class="pl-2">{{ fixture.league.name }}</p>
+                            </span>
+                            <p>{{ fixture.date.split('T')[0] }}</p>
+                            <span class="flex flex-row justify-between">
+                                <img class="w-5 h-5" :src="fixture.teams.home.logo" alt="gamescores home team logo">
+                                <p class="pl-2">{{ fixture.teams.home.name }}</p>
+                            </span>
+                            <p class="text-gray-50 bg-green-500 px-2 py-1 rounded-3xl">{{ fixture.goals.home + " : " + fixture.goals.away }}</p>
+                            <span class="flex flex-row justify-between">
+                                <img class="w-5 h-5" :src="fixture.teams.away.logo" alt="gamescores away team logo">
+                                <p class="pl-2">{{ fixture.teams.away.name }}</p>                    
+                            </span>
                     </div>
 </template>
 <style>
