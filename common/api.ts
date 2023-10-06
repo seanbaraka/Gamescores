@@ -1,6 +1,7 @@
 import { BASE_URL, RAPID_HEADERS } from '~/common/rapidapi';
 import pastFixtures from '~/server/api/updates/past-fixtures';
 
+// todo: Learn about enums
 export enum TTL {
   DAILY = 60 * 60 * 24,
   WEEKLY = 86400 * 7,
@@ -108,17 +109,7 @@ export async function updateFixtures(selectedFixtures: any[], date: string) {
   });
 }
 
-//  [                                                                                                16:52:43
-//   {
-//     id: 1126352,
-//     timestamp: 1696524300000,
-//     teams: { home: [Object], away: [Object] },
-//     league: {
-//       id: 3,
-//       name: 'UEFA Europa League',
-//       logo: 'https://media-4.api-sports.io/football/leagues/3.png'
-//     }
-//   }]
+
 
 export async function getUpdatesFromCache(date: string) {
   const fixtures = (await useStorage().getItem(
@@ -208,6 +199,9 @@ export async function getOdds(fixtureId: any) {
 // getOdds('568987');
 
 export async function getPastFixtures() {
+  // Ids of all past fixtures from cache
+  let pastFixturesIds:any[]=[];
+  // past fixtures from api
   let pastFixtures:any[]=[];
   try {
     // get all cached fixtures
@@ -221,16 +215,37 @@ export async function getPastFixtures() {
       }
       // loop through all dates and get fixtures
       for(let i=0;i<fixtureDates.length;i++){
-         pastFixtures.push((await useStorage().getItem(
-          `redis:fixtures::${fixtureDates[i]}`
-        )) as any[]);
+        let pastFixture = (await useStorage().getItem(`redis:fixtures::${fixtureDates[i]}`)) as any[];
+        // pastFixtures = [...pastFixtures,...pastFixture];
+        // loop through all fixtures and get their ids
+        for(let j=0;j<pastFixture.length;j++){
+          pastFixturesIds = [...pastFixturesIds,pastFixture[j].id];
+        }
       }
-      console.log('fixtures',pastFixtures);
+      // turn pastFixtureIds into a string of maximum 20 ids because of the api limit
+      let pastFixturesIdsParamValue:string = pastFixturesIds.slice(0,20).join('-');
+      // get past fixtures from rapid api using the ids
+      try {
+        const apiCall = await $fetch<any>(BASE_URL + '/v3/fixtures', {
+          params: {
+            ids: pastFixturesIdsParamValue,
+          },
+          headers: RAPID_HEADERS,
+        });
+        if (apiCall.response) {
+          pastFixtures = apiCall.response;
+        }
+      } catch (e: any) {
+        console.log('An error occurred while fetching a matches odds', e.message);
+        return (e)
+      }
+      console.log('fixtures',pastFixtures,pastFixtures.length);
     }else{
       console.log('No cached fixtures');
     }
   } catch (error) {
     console.log('An error occurred while fetching cached fixtures', error);
+    return (error);
   }
   return pastFixtures;
 } 

@@ -8,7 +8,7 @@ const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 // get past fixtures
 // TODO: Display past fixtures
 const { data: pastFixtures } = useFetch('/api/updates/past-fixtures');
-console.log(pastFixtures)
+console.log(pastFixtures.value)
 const { status, signOut } = useAuth();
  
 if (status.value !== 'authenticated') {
@@ -122,9 +122,9 @@ const updateCurrentFixture = (fixture: any) => {
                         v-for="fixture of pastFixtures"
                         :class="[fixture.correct ? 'bg-[#F8F8F8] border-[#4A7856] text-green-700' : 'bg-[#FFF5F9] text-[#FF4684] border-[#FFC8DA]']">
                         <p></p>
-                        <p>{{ fixture.home }}</p>
+                        <p>{{ fixture.teams.home.name }}</p>
                         <p>vs</p>
-                        <p>{{ fixture.away }}</p>
+                        <p>{{ fixture.teams.away.name }}</p>
                         <span v-if="fixture.correct">
                         <img src="@/assets/img/check-badge.svg" alt="">
                     </span>
