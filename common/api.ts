@@ -177,6 +177,7 @@ export async function getOdds(fixtureId: any) {
   if (cache) {
     return cache as any[];
   }
+  // useStorage().removeItem(`redis:odds::${fixtureId}`);
   try {
     const apiCall = await $fetch<any>(BASE_URL + '/v3/odds', {
       params: {
@@ -185,7 +186,7 @@ export async function getOdds(fixtureId: any) {
       headers: RAPID_HEADERS,
     });
     if (apiCall.response) {
-      odds = apiCall.response[0].bookmakers[0].bets;
+      odds = apiCall.response[0].bookmakers[1].bets;
       await useStorage().setItem(`redis:odds::${fixtureId}`, odds);
     }
   } catch (e: any) {
@@ -201,14 +202,19 @@ export async function getPastFixtures() {
   let pastFixturesIds:any[]=[];
   // past fixtures from api
   let pastFixtures:any[]=[];
+  const cache = await useStorage().getItem(`redis:pastFixtures`);
+  if (cache) {
+    pastFixtures = cache as any[];
+    return pastFixtures;
+  }
   try {
     // get all cached fixtures
     let cachedFixtures = await useStorage().getKeys('redis:fixtures');
     console.clear();
     let fixtureDates: string[] = [];
     if(cachedFixtures){
-      // for loop to store all dates in one array
-      for (let i = 0; i < cachedFixtures.length; i++) {
+      // for loop to store all dates in one array in an inverted format to get the latest dates first
+      for (let i = cachedFixtures.length-1; i >0; i--) {
         fixtureDates.push(cachedFixtures[i].split(':')[2]);
       }
       // loop through all dates and get fixtures
@@ -231,6 +237,9 @@ export async function getPastFixtures() {
         });
         if (apiCall.response) {
           pastFixtures = apiCall.response;
+          await useStorage().setItem(`redis:pastFixtures`, pastFixtures, {
+            ttl: TTL.DAILY,
+          });
         }
       } catch (e: any) {
         console.log('An error occurred while fetching a matches odds', e.message);

@@ -53,6 +53,7 @@ async function toggleCard() {
     // console.clear();
     // Odds
     const bets = await useFetch<any>(`/api/updates/odds?fixture=${id}`);
+    console.log(bets.data.value);
     percent = cardData.value.percent;
     winner = cardData.value.winner;
     lastFiveMatches = cardData.value.lastFiveMatches;
@@ -62,7 +63,9 @@ async function toggleCard() {
       draw: bets.data.value[0].values[1].odd,
       away: bets.data.value[0].values[2].odd
     };
+
     underOverOdds = {
+      //<!--*The API keeps changing its response change the bookmakers when that happens-->
       under15: bets.data.value[3].values[3].odd,
       over15: bets.data.value[3].values[2].odd,
       over25: bets.data.value[3].values[6].odd,
