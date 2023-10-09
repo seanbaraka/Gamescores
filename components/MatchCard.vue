@@ -1,35 +1,10 @@
 <script setup lang="ts">
-// props
 import dayjs from 'dayjs';
-// get odds by import a function from server/updates/odds.ts
-interface propsTypes {
-  leagueName: string;
-  leagueLogo: string;
-  homeTeam: string;
-  homeLogo: string;
-  awayTeam: string;
-  awayLogo: string;
-  id: string;
-  timestamp: number;
-}
+const props = defineProps({
+  data: Object,
 
-
-const props: propsTypes = defineProps({
-  leagueName: '',
-  leagueLogo: '',
-  homeTeam: '',
-  homeLogo: '',
-  awayTeam: '',
-  awayLogo: '',
-  id: '',
-  timestamp: 0,
 });
-
-
-// console.log(props.firstGame)
-const id = props.id;
-const timestamp = props.timestamp;
-
+const id:string = props.data.id;
 let showCard = ref(false);
 let advice: string;
 let underOver: number;
@@ -39,7 +14,7 @@ let winnerName: string;
 let lastFiveMatches: { home: string; away: string };
 let percent: { home: string; draw: string; away: string };
 let matchWinner: { home: string; draw: string; away: string }
-let underOverOdds:{under15: string; over15: string; over25: string; under25: string; }
+let underOverOdds:{'under1.5': string; 'over1.5': string; 'over2.5': string; 'under2.5': string; }
 const statsLoaded = ref(false);
 // Closing and opening the card
 async function toggleCard() {
@@ -58,19 +33,21 @@ async function toggleCard() {
     winner = cardData.value.winner;
     lastFiveMatches = cardData.value.lastFiveMatches;
     // console.log("home:",lastFiveMatches.home,"away:",lastFiveMatches.away)
-    matchWinner = {
-      home: bets.data.value[0].values[0].odd,
-      draw: bets.data.value[0].values[1].odd,
-      away: bets.data.value[0].values[2].odd
+  matchWinner = {
+      home: bets.data.value[0] !== undefined ? bets.data.value[0].values[0].odd : '',
+      draw: bets.data.value[0] !== undefined ? bets.data.value[0].values[1].odd : '',
+      away: bets.data.value[0] !== undefined ? bets.data.value[0].values[2].odd : '',
     };
 
+
+    console.log(bets.data.value[3])
     underOverOdds = {
-      //<!--*The API keeps changing its response change the bookmakers when that happens-->
-      under15: bets.data.value[3].values[3].odd,
-      over15: bets.data.value[3].values[2].odd,
-      over25: bets.data.value[3].values[6].odd,
-      under25: bets.data.value[3].values[7].odd,
-    }
+      'under1.5': bets.data.value[3] !== undefined ? bets.data.value[3].values[3].odd : '',
+      'over1.5': bets.data.value[3] !== undefined ? bets.data.value[3].values[2].odd : '',
+      'over2.5': bets.data.value[3] !== undefined ? bets.data.value[3].values[6].odd : '',
+      'under2.5': bets.data.value[3] !== undefined ? bets.data.value[3].values[7].odd : '',
+    };
+
     if (!cardData.value) return;
 
     statsLoaded.value = true;
@@ -83,9 +60,9 @@ async function toggleCard() {
     };
     // console.log('winner',winner)
     // console.log('cardData', cardData);
-    if (winner.name === props.homeTeam) {
+    if (winner.name === props.data.teams.home.name) {
       winnerName = 'Home';
-    } else if (winner.name === props.awayTeam) {
+    } else if (winner.name === props.data.teams.away.name) {
       winnerName = 'Away';
     } else {
       winnerName = 'Draw';
@@ -99,27 +76,27 @@ async function toggleCard() {
     <div class="grid grid-cols-12 gap-2 items-center justify-between"
       :class="{ 'dark:border-gray-500 border-b-[1px] pb-2': showCard, 'border-b-0': !showCard }">
       <div class="flex items-center gap-1 col-span-2">
-        <img class="w-5 h-5" :src="leagueLogo" alt="" />
-        <p class="text-xs">{{ leagueName }}</p>
+        <img class="w-5 h-5" :src="data.league.logo" alt="" />
+        <p class="text-xs">{{ data.league.name }}</p>
       </div>
-      <div class="text-xs col-span-3 text-right">{{ homeTeam }}</div>
+      <div class="text-xs col-span-3 text-right">{{ data.teams.home.name }}</div>
       <div class="flex justify-center items-center col-span-3 gap-3">
         <div class="home-logo">
-          <img :src="homeLogo" class="w-5 h-5" alt="" />
+          <img :src="data.teams.home.logo.src" class="w-5 h-5" alt="" />
         </div>
         <div class="time-date col-span-1 text-xs flex flex-col items-center justify-center">
           <div class="date">
-            {{ dayjs(timestamp).format('D MMM') }}
+            {{ dayjs(data.timestamp).format('D MMM') }}
           </div>
           <div class="time">
-            {{ dayjs(timestamp).format('HH:mm') }}
+            {{ dayjs(data.timestamp).format('HH:mm') }}
           </div>
         </div>
         <div class="away-logo">
-          <img :src="awayLogo" class="w-5 h-5" alt="" />
+          <img :src="data.teams.away.logo.src" class="w-5 h-5" alt="" />
         </div>
       </div>
-      <div class="text-xs col-span-3">{{ awayTeam }}</div>
+      <div class="text-xs col-span-3">{{ data.teams.away.name }}</div>
       <button @click="toggleCard"
         class="title-icon col-span-1 w-6 h-6 rounded-full text-gray-500 p-1.5 transition duration-300"
         :class="{ 'rotate-180': showCard, 'rotate-0': !showCard }">
@@ -151,22 +128,22 @@ async function toggleCard() {
             <span class="board-items rounded-l-lg" :class="underOver != -1.5 && underOver != 0
                 ? 'bg-green-500 text-gray-50 border-green-500'
                 : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
-              ">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 1.5 {{ underOverOdds.over15 }}</span><span class="second-board__items board-items rounded-r-lg"
+              ">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 1.5 {{ underOverOdds['over1.5'] }}</span><span class="second-board__items board-items rounded-r-lg"
               :class="underOver == -1.5 || underOver === 0
                   ? 'bg-green-500 text-gray-50 border-green-500'
                   : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
-                ">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 1.5 {{ underOverOdds.under15 }}</span>
+                ">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 1.5 {{ underOverOdds['under1.5'] }}</span>
           </div>
           <h4 class="text-gray-500 mt-2 py-1">Type Ov/Un 2.5</h4>
           <div class="board grid-cols-2">
             <span class="third-board__items board-items rounded-l-lg" :class="underOver >= 2.5
                 ? 'bg-green-500 text-gray-50 border-green-500'
                 : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
-              ">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 2.5 {{ underOverOdds.over25 }}</span><span class="third-board__items board-items rounded-r-lg"
+              ">1&nbsp;&nbsp;&nbsp;&nbsp;Ov. 2.5 {{ underOverOdds['over2.5'] }}</span><span class="third-board__items board-items rounded-r-lg"
               :class="underOver < 2.5
                   ? 'bg-green-500 text-gray-50 border-green-500'
                   : 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-none text-gray-700 border-gray-300'
-                ">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 2.5 {{ underOverOdds.under25 }}</span>
+                ">2&nbsp;&nbsp;&nbsp;&nbsp;Un. 2.5 {{ underOverOdds['under2.5'] }}</span>
           </div>
         </div>
         <div class="w-1/2 px-4">

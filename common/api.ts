@@ -173,11 +173,11 @@ export async function getPredictions(fixtureId: string) {
 
 export async function getOdds(fixtureId: any) {
   let odds: any[] = [];
-  const cache = await useStorage().getItem(`redis:odds::${fixtureId}`);
-  if (cache) {
-    return cache as any[];
-  }
-  // useStorage().removeItem(`redis:odds::${fixtureId}`);
+  // const cache = await useStorage().getItem(`redis:odds::${fixtureId}`);
+  // if (cache) {
+  //   return cache as any[];
+  // }
+  useStorage().removeItem(`redis:odds::${fixtureId}`);
   try {
     const apiCall = await $fetch<any>(BASE_URL + '/v3/odds', {
       params: {
@@ -186,8 +186,8 @@ export async function getOdds(fixtureId: any) {
       headers: RAPID_HEADERS,
     });
     if (apiCall.response) {
-      odds = apiCall.response[0].bookmakers[1].bets;
-      await useStorage().setItem(`redis:odds::${fixtureId}`, odds);
+      odds = apiCall.response[0].bookmakers[0].bets;
+      // await useStorage().setItem(`redis:odds::${fixtureId}`, odds);
     }
   } catch (e: any) {
     console.log('An error occurred while fetching a matches odds', e.message);

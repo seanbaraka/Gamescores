@@ -73,8 +73,10 @@ const updateFixtures = async () => {
     // do something with the result that pops up.
     selectedFixtures.value = [];
     console.log('successfully updated fixture',data.value);
-    // Reload page
+    // Refresh the page
     window.location.reload();
+    
+
   }
 };
 </script>
