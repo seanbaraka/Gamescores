@@ -1,86 +1,17 @@
 <script setup lang="ts">
 import MatchCard from "../components/MatchCard.vue";
-import dayjs from "dayjs";
-// TODO: Remove unused code
+import PastMatches from "../components/PastMatches.vue";
 // get fixtures data
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 // console.log(fixtures.value)
 // get past fixtures
-// TODO: Display past fixtures
 const { data: pastFixtures } = useFetch('/api/updates/past-fixtures');
-console.log(pastFixtures)
+// console.log(pastFixtures.value)
 const { status, signOut } = useAuth();
  
 if (status.value !== 'authenticated') {
     navigateTo('auth')
 }
-
-// const pastFixtures = ref([
-//     { home: "Arsenal", away: "Brigton Albion & Hove", correct: true, prediction: "Home Win", premium: false, odds: 1.23 },
-//     { home: "Manchester City", away: "Chelsea", correct: false, prediction: "Home Win", premium: true, odds: 1.56 },
-//     { home: "Man Utd", away: "Everton", correct: false, prediction: "Home Win", premium: false, odds: 1.23 },
-//     { home: "Liverpool F.C", away: "Southampton F.C", correct: true, prediction: "Home Win", premium: true, odds: 1.56 },
-//     { home: "Arsenal", away: "Brigton Albion & Hove", correct: true, prediction: "Home Win", premium: false, odds: 1.23 },
-//     { home: "Manchester City", away: "Chelsea", correct: false, prediction: "Home Win", premium: true, odds: 1.56 },
-// ]);
-
-const matchResults = [
-    { key: 'Home Win' },
-    { key: 'Away Win' },
-    { key: 'Draw' },
-    { key: 'Match Cancelled' },
-    { key: 'Match Postponed' },
-]
-
-type ActiveFixture = {
-    date: Date;
-    home: string,
-    away: string,
-    category: string,
-    prediction: string,
-    odds: string,
-    premium: boolean,
-    outcome?: string,
-}
-
-const fixtureCategories = [
-    { key: 'Free' },
-    { key: 'Premium' }
-]
-const fixtureCategory = ref({ key: 'Free' })
-const selectedResult = ref()
-
-const isUpdatingFixture = ref(false);
-const activeFixture = ref<ActiveFixture>({} as ActiveFixture);
-const uploadingFixture = ref(false);
-const saveOrUpdateFixture = async () => {
-    // do nothing when we have nothing or missing fields
-    if (Object.keys(activeFixture.value).length < 5) return;
-    uploadingFixture.value = true;
-    activeFixture.value.premium = fixtureCategory.value.key === 'Premium';
-    const { data: uploadFixture, pending, error } = await useFetch('/api/fixtures', {
-        method: "post",
-        body: activeFixture.value
-    });
-    if (!pending.value && uploadFixture.value) {
-        uploadingFixture.value = false;
-        await refresh();
-        // reset the form;
-        activeFixture.value = {} as ActiveFixture;
-    }
-}
-
-const setFixtureCategory = (category: any) => {
-    fixtureCategory.value.key = category.key;
-}
-
-const updateCurrentFixture = (fixture: any) => {
-    activeFixture.value = fixture;
-    isUpdatingFixture.value = true;
-    fixtureCategory.value.key = fixture.premium ? "Premium" : "Free"
-    // key.value = fixture.premium ? "Premium" : "Free"
-}
-
 
 </script>
 <template>
@@ -101,15 +32,9 @@ const updateCurrentFixture = (fixture: any) => {
                 <div class="matches-list" v-if="fixtures.length">
                     <MatchCard 
                     v-for="data in fixtures"
-                    :leagueName="data.league.name"
-                    :leagueLogo="data.league.logo"
-                    :homeTeam="data.teams.home.name"
-                    :homeLogo="data.teams.home.logo.src"
-                    :awayTeam="data.teams.away.name"
-                    :awayLogo="data.teams.away.logo.src"
-                    :id="data.id"
-                    :timestamp="data.timestamp"
+                    :data="data"
                     />
+
                 </div>
                 <div class="no-matches" v-else>
                   <h2>No Pending Matches Today</h2>
@@ -117,21 +42,15 @@ const updateCurrentFixture = (fixture: any) => {
             </div>
             <div class="past-fixtures mt-10">
                 <h5>Past Matches</h5>
-                <div class="matches-list">
-                    <div class="flex justify-between my-2 items-center text-sm px-4 py-[.75em] border rounded-lg"
-                        v-for="fixture of pastFixtures"
-                        :class="[fixture.correct ? 'bg-[#F8F8F8] border-[#4A7856] text-green-700' : 'bg-[#FFF5F9] text-[#FF4684] border-[#FFC8DA]']">
-                        <p></p>
-                        <p>{{ fixture.home }}</p>
-                        <p>vs</p>
-                        <p>{{ fixture.away }}</p>
-                        <span v-if="fixture.correct">
-                        <img src="@/assets/img/check-badge.svg" alt="">
-                    </span>
-                    <p>{{ fixture.prediction }}</p>
-                    <p>{{ fixture.odds }}</p>
-                </div>
+                <div class="matches-list" v-if="pastFixtures.length">
+            <PastMatches
+            v-for="fixture in pastFixtures"
+            :fixture="fixture"
+            />
             </div>
+            <div v-else>
+                  <h2>No Past Matches Today</h2>
+                </div>
         </div>
     </div>
     <div

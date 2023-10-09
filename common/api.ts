@@ -1,5 +1,4 @@
 import { BASE_URL, RAPID_HEADERS } from '~/common/rapidapi';
-import pastFixtures from '~/server/api/updates/past-fixtures';
 
 export enum TTL {
   DAILY = 60 * 60 * 24,
@@ -108,17 +107,7 @@ export async function updateFixtures(selectedFixtures: any[], date: string) {
   });
 }
 
-//  [                                                                                                16:52:43
-//   {
-//     id: 1126352,
-//     timestamp: 1696524300000,
-//     teams: { home: [Object], away: [Object] },
-//     league: {
-//       id: 3,
-//       name: 'UEFA Europa League',
-//       logo: 'https://media-4.api-sports.io/football/leagues/3.png'
-//     }
-//   }]
+
 
 export async function getUpdatesFromCache(date: string) {
   const fixtures = (await useStorage().getItem(
@@ -188,6 +177,7 @@ export async function getOdds(fixtureId: any) {
   if (cache) {
     return cache as any[];
   }
+  //useStorage().removeItem(`redis:odds::${fixtureId}`);
   try {
     const apiCall = await $fetch<any>(BASE_URL + '/v3/odds', {
       params: {
@@ -208,29 +198,60 @@ export async function getOdds(fixtureId: any) {
 // getOdds('568987');
 
 export async function getPastFixtures() {
+  // Ids of all past fixtures from cache
+  let pastFixturesIds:any[]=[];
+  // past fixtures from api
   let pastFixtures:any[]=[];
+  const cache = await useStorage().getItem(`redis:pastFixtures`);
+  if (cache) {
+    pastFixtures = cache as any[];
+    return pastFixtures;
+  }
   try {
     // get all cached fixtures
     let cachedFixtures = await useStorage().getKeys('redis:fixtures');
     console.clear();
     let fixtureDates: string[] = [];
     if(cachedFixtures){
-      // for loop to store all dates in one array
-      for (let i = 0; i < cachedFixtures.length; i++) {
+      // for loop to store all dates in one array in an inverted format to get the latest dates first
+      for (let i = cachedFixtures.length-1; i >0; i--) {
         fixtureDates.push(cachedFixtures[i].split(':')[2]);
       }
       // loop through all dates and get fixtures
-      for(let i=0;i<fixtureDates.length;i++){
-         pastFixtures.push((await useStorage().getItem(
-          `redis:fixtures::${fixtureDates[i]}`
-        )) as any[]);
+      for(const fixtureDate of fixtureDates){
+        let pastFixture = (await useStorage().getItem(`redis:fixtures::${fixtureDate}`)) as any[];
+        // loop through all fixtures and get their ids
+        for(const fixture of pastFixture){
+          pastFixturesIds = [...pastFixturesIds,fixture.id];
+        }
       }
-      console.log('fixtures',pastFixtures);
+      // turn pastFixtureIds into a string of maximum 20 ids because of the api limit
+      let pastFixturesIdsParamValue:string = pastFixturesIds.slice(0,20).join('-');
+      // get past fixtures from rapid api using the ids
+      try {
+        const apiCall = await $fetch<any>(BASE_URL + '/v3/fixtures', {
+          params: {
+            ids: pastFixturesIdsParamValue,
+          },
+          headers: RAPID_HEADERS,
+        });
+        if (apiCall.response) {
+          pastFixtures = apiCall.response;
+          await useStorage().setItem(`redis:pastFixtures`, pastFixtures, {
+            ttl: TTL.DAILY,
+          });
+        }
+      } catch (e: any) {
+        console.log('An error occurred while fetching a matches odds', e.message);
+        return (e)
+      }
+      console.log('fixtures',pastFixtures,pastFixtures.length);
     }else{
       console.log('No cached fixtures');
     }
   } catch (error) {
     console.log('An error occurred while fetching cached fixtures', error);
+    return (error);
   }
   return pastFixtures;
 } 
