@@ -1,3 +1,4 @@
+<!-- TODO: Add remove fixture button -->
 <script setup lang="ts">
 import dayjs from 'dayjs';
 const props = defineProps({
@@ -34,18 +35,18 @@ async function toggleCard() {
     lastFiveMatches = cardData.value.lastFiveMatches;
     // console.log("home:",lastFiveMatches.home,"away:",lastFiveMatches.away)
   matchWinner = {
-      home: bets.data.value[0] !== undefined ? bets.data.value[0].values[0].odd : '',
-      draw: bets.data.value[0] !== undefined ? bets.data.value[0].values[1].odd : '',
-      away: bets.data.value[0] !== undefined ? bets.data.value[0].values[2].odd : '',
+      home: bets.data.value[0].values[0] !== undefined ? bets.data.value[0].values[0].odd : '',
+      draw: bets.data.value[0].values[1] !== undefined ? bets.data.value[0].values[1].odd : '',
+      away: bets.data.value[0].values[2] !== undefined ? bets.data.value[0].values[2].odd : '',
     };
 
 
     console.log(bets.data.value[3])
     underOverOdds = {
-      'under1.5': bets.data.value[3] !== undefined ? bets.data.value[3].values[3].odd : '',
-      'over1.5': bets.data.value[3] !== undefined ? bets.data.value[3].values[2].odd : '',
-      'over2.5': bets.data.value[3] !== undefined ? bets.data.value[3].values[6].odd : '',
-      'under2.5': bets.data.value[3] !== undefined ? bets.data.value[3].values[7].odd : '',
+      'under1.5': bets.data.value[3].values[3] !== undefined ? bets.data.value[3].values[3].odd : '',
+      'over1.5': bets.data.value[3].values[2] !== undefined ? bets.data.value[3].values[2].odd : '',
+      'over2.5': bets.data.value[3].values[6] !== undefined ? bets.data.value[3].values[6].odd : '',
+      'under2.5': bets.data.value[3].values[7] !== undefined ? bets.data.value[3].values[7].odd : '',
     };
 
     if (!cardData.value) return;
@@ -152,16 +153,16 @@ async function toggleCard() {
           <div class="last-five-matches flex gap-4 justify-between my-1">
             <div class="grid grid-cols-5">
               <span
-              :class="lastFiveMatches.home[i-1]== 'W'? 'won': lastFiveMatches.home[i-1]== 'D'? 'draw': lastFiveMatches.home[i-1]== 'L'? 'lost': 'bg-gray-200'"
+              :class="!lastFiveMatches.home ? 'bg-gray-200': lastFiveMatches.home[i-1]=== 'W'? 'won': lastFiveMatches.home[i-1]=== 'D'? 'draw': lastFiveMatches.home[i-1]=== 'L'? 'lost': 'bg-gray-200'"
                v-for="i in 5" :key="i" 
-               class="results">{{ lastFiveMatches.home[i-1] }}</span>
+               class="results">{{ !lastFiveMatches.home ? '': lastFiveMatches.home[i-1] }}</span>
             </div>
             <div class="grid grid-cols-5">
               <span
               v-for="i in 5" :key="i"
-              :class="lastFiveMatches.away[i-1]== 'W'? 'won': lastFiveMatches.away[i-1]== 'D'? 'draw':lastFiveMatches.away[i-1]=='L'?'lost':'bg-gray-200'"
+              :class="!lastFiveMatches.away ? 'bg-gray-200': lastFiveMatches.away[i-1]== 'W'? 'won': lastFiveMatches.away[i-1]== 'D'? 'draw':lastFiveMatches.away[i-1]=='L'?'lost':'bg-gray-200'"
               class="results">
-              {{ lastFiveMatches.away[i-1]}}
+              {{ !lastFiveMatches.away ? 'bg-gray-200': lastFiveMatches.away[i-1]}}
             </span>
 
             </div>
