@@ -33,21 +33,36 @@ async function toggleCard() {
     percent = cardData.value.percent;
     winner = cardData.value.winner;
     lastFiveMatches = cardData.value.lastFiveMatches;
-    // console.log("home:",lastFiveMatches.home,"away:",lastFiveMatches.away)
-  matchWinner = {
-      home: bets.data.value[0].values[0] !== undefined ? bets.data.value[0].values[0].odd : '',
-      draw: bets.data.value[0].values[1] !== undefined ? bets.data.value[0].values[1].odd : '',
-      away: bets.data.value[0].values[2] !== undefined ? bets.data.value[0].values[2].odd : '',
-    };
-
-
-    console.log(bets.data.value[3])
-    underOverOdds = {
-      'under1.5': bets.data.value[3].values[3] !== undefined ? bets.data.value[3].values[3].odd : '',
-      'over1.5': bets.data.value[3].values[2] !== undefined ? bets.data.value[3].values[2].odd : '',
-      'over2.5': bets.data.value[3].values[6] !== undefined ? bets.data.value[3].values[6].odd : '',
-      'under2.5': bets.data.value[3].values[7] !== undefined ? bets.data.value[3].values[7].odd : '',
-    };
+    // check if there are odds
+    if(bets.data.value[0] !== undefined){
+      matchWinner = {
+        home: bets.data.value[0].values[0] !== undefined ? bets.data.value[0].values[0].odd : '' ,
+        draw: bets.data.value[0].values[1] !== undefined ? bets.data.value[0].values[1].odd : '',
+        away: bets.data.value[0].values[2] !== undefined ? bets.data.value[0].values[2].odd : '',
+      };
+    }else{
+      matchWinner = {
+        home: '' ,
+        draw: '',
+        away: '',
+      };
+    }
+// check if there are odds
+    if(bets.data.value[3] !== undefined){
+      underOverOdds = {
+        'under1.5': bets.data.value[3].values[3] !== undefined ? bets.data.value[3].values[3].odd : '',
+        'over1.5': bets.data.value[3].values[2] !== undefined ? bets.data.value[3].values[2].odd : '',
+        'over2.5': bets.data.value[3].values[6] !== undefined ? bets.data.value[3].values[6].odd : '',
+        'under2.5': bets.data.value[3].values[7] !== undefined ? bets.data.value[3].values[7].odd : '',
+      };
+    }else{
+      underOverOdds = {
+        'under1.5': '',
+        'over1.5': '',
+        'over2.5': '',
+        'under2.5': '',
+      };
+    }
 
     if (!cardData.value) return;
 
@@ -162,7 +177,7 @@ async function toggleCard() {
               v-for="i in 5" :key="i"
               :class="!lastFiveMatches.away ? 'bg-gray-200': lastFiveMatches.away[i-1]== 'W'? 'won': lastFiveMatches.away[i-1]== 'D'? 'draw':lastFiveMatches.away[i-1]=='L'?'lost':'bg-gray-200'"
               class="results">
-              {{ !lastFiveMatches.away ? 'bg-gray-200': lastFiveMatches.away[i-1]}}
+              {{ !lastFiveMatches.away ? '': lastFiveMatches.away[i-1]}}
             </span>
 
             </div>

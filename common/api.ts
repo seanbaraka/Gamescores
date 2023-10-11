@@ -210,13 +210,14 @@ export async function getPastFixtures() {
   try {
     // get all cached fixtures
     let cachedFixtures = await useStorage().getKeys('redis:fixtures');
-    console.clear();
+    // console.clear();
     let fixtureDates: string[] = [];
     if(cachedFixtures){
       // for loop to store all dates in one array in an inverted format to get the latest dates first
-      for (let i = cachedFixtures.length-1; i >0; i--) {
-        fixtureDates.push(cachedFixtures[i].split(':')[2]);
+      for (let cachedFixture in cachedFixtures) {
+        fixtureDates.push(cachedFixture.split(':')[2]);
       }
+      console.log('fixtureDates',fixtureDates);
       // loop through all dates and get fixtures
       for(const fixtureDate of fixtureDates){
         let pastFixture = (await useStorage().getItem(`redis:fixtures::${fixtureDate}`)) as any[];
