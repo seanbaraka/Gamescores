@@ -214,7 +214,7 @@ export async function getPastFixtures() {
     let fixtureDates: string[] = [];
     if(cachedFixtures){
       // for loop to store all dates in one array in an inverted format to get the latest dates first
-      for (let cachedFixture in cachedFixtures) {
+      for (let cachedFixture of cachedFixtures) {
         fixtureDates.push(cachedFixture.split(':')[2]);
       }
       console.log('fixtureDates',fixtureDates);
