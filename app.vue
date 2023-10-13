@@ -18,6 +18,8 @@ const collections = collection(db, 'fixtures');
 const docs = await getDocs(collections);
 fixtures.value = docs.docs.map(record => record.data())
 
+
+
 </script>
 <template>
   <div>
