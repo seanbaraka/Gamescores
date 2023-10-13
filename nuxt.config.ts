@@ -18,6 +18,7 @@ export default defineNuxtConfig({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             AUTH_ORIGIN: process.env.AUTH_ORIGIN,
             AUTH_SECRET: process.env.AUTH_SECRET,
+            
         },
         auth: {
             computed: {

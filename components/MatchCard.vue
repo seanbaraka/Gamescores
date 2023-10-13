@@ -30,11 +30,14 @@ async function toggleCard() {
     // Odds
     const bets = await useFetch<any>(`/api/updates/odds?fixture=${id}`);
     console.log(bets.data.value);
-    percent = cardData.value.percent;
-    winner = cardData.value.winner;
-    lastFiveMatches = cardData.value.lastFiveMatches;
+    if(cardData.value){
+
+      percent = cardData.value.percent;
+      winner = cardData.value.winner;
+      lastFiveMatches = cardData.value.lastFiveMatches;
+    }
     // check if there are odds
-    if(bets.data.value[0] !== undefined){
+    if(bets.data  && bets.data.value ){
       matchWinner = {
         home: bets.data.value[0].values[0] !== undefined ? bets.data.value[0].values[0].odd : '' ,
         draw: bets.data.value[0].values[1] !== undefined ? bets.data.value[0].values[1].odd : '',
@@ -48,7 +51,7 @@ async function toggleCard() {
       };
     }
 // check if there are odds
-    if(bets.data.value[3] !== undefined){
+    if(bets.data  && bets.data.value ){
       underOverOdds = {
         'under1.5': bets.data.value[3].values[3] !== undefined ? bets.data.value[3].values[3].odd : '',
         'over1.5': bets.data.value[3].values[2] !== undefined ? bets.data.value[3].values[2].odd : '',

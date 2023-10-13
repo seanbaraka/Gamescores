@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import MatchCard from "../components/MatchCard.vue";
-import PastMatches from "../components/PastMatches.vue";
+// import MatchCard from "../components/MatchCard.vue";
+// import PastMatches from "../components/PastMatches.vue";
 // get fixtures data
 const { data: fixtures, refresh, pending } = useFetch('/api/updates/fixtures');
 // console.log(fixtures.value)
