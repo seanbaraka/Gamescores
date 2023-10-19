@@ -3,17 +3,21 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number | undefined;
 
-  @Column({type:'varchar'})
-  email: string
+  @Column({ type: 'varchar' })
+  email: string | undefined;
 
-  @Column({type:'varchar'})
-  name: string
+  @Column({ type: 'varchar', default: 'User', nullable: false })
+  role: string | undefined;
 
-  @Column({type:'int', nullable: true})
-  age: number
+  @Column({ type: 'boolean', default: false, nullable: false })
+  isPremium: boolean | undefined;
 
-  @Column({type:'varchar'})
-  role: string
+  @Column({ type: 'boolean', default: true })
+  active: boolean | undefined;
+
+  @Column({ type: 'date', nullable: false, default: () => 'CURRENT_DATE'})
+  dateSignedUp: Date | undefined;
 }
+ 
