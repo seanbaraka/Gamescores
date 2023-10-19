@@ -1,4 +1,3 @@
-<!-- TODO: Add remove fixture button -->
 <script setup lang="ts">
 import dayjs from 'dayjs';
 const props = defineProps({
@@ -28,20 +27,25 @@ async function toggleCard() {
     } = await useFetch<any>(`/api/updates/predictions?fixture=${id}`);
     // console.clear();
     // Odds
-    const bets = await useFetch<any>(`/api/updates/odds?fixture=${id}`);
-    console.log(bets.data.value);
+    const {data:bets, error:err} = await useFetch<any>(`/api/updates/odds?fixture=${id}`);
+    console.log(bets.value);
     if(cardData.value){
-
       percent = cardData.value.percent;
       winner = cardData.value.winner;
       lastFiveMatches = cardData.value.lastFiveMatches;
     }
     // check if there are odds
-    if(bets.data  && bets.data.value ){
+    if(bets.length > 0  && !err){
       matchWinner = {
-        home: bets.data.value[0].values[0] !== undefined ? bets.data.value[0].values[0].odd : '' ,
-        draw: bets.data.value[0].values[1] !== undefined ? bets.data.value[0].values[1].odd : '',
-        away: bets.data.value[0].values[2] !== undefined ? bets.data.value[0].values[2].odd : '',
+        home: bets.value[0].values[0] !== undefined ? bets.value[0].values[0].odd : '' ,
+        draw: bets.value[0].values[1] !== undefined ? bets.value[0].values[1].odd : '',
+        away: bets.value[0].values[2] !== undefined ? bets.value[0].values[2].odd : '',
+      };
+          underOverOdds = {
+        'under1.5': bets.value[3].values[3] !== undefined ? bets.value[3].values[3].odd : '',
+        'over1.5': bets.value[3].values[2] !== undefined ? bets.value[3].values[2].odd : '',
+        'over2.5': bets.value[3].values[6] !== undefined ? bets.value[3].values[6].odd : '',
+        'under2.5': bets.value[3].values[7] !== undefined ? bets.value[3].values[7].odd : '',
       };
     }else{
       matchWinner = {
@@ -49,17 +53,7 @@ async function toggleCard() {
         draw: '',
         away: '',
       };
-    }
-// check if there are odds
-    if(bets.data  && bets.data.value ){
-      underOverOdds = {
-        'under1.5': bets.data.value[3].values[3] !== undefined ? bets.data.value[3].values[3].odd : '',
-        'over1.5': bets.data.value[3].values[2] !== undefined ? bets.data.value[3].values[2].odd : '',
-        'over2.5': bets.data.value[3].values[6] !== undefined ? bets.data.value[3].values[6].odd : '',
-        'under2.5': bets.data.value[3].values[7] !== undefined ? bets.data.value[3].values[7].odd : '',
-      };
-    }else{
-      underOverOdds = {
+            underOverOdds = {
         'under1.5': '',
         'over1.5': '',
         'over2.5': '',
