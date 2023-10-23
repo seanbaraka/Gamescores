@@ -1,8 +1,7 @@
-import { AppDataSource } from '~/server/db/data-source';
 import { User } from '~/server/db/models/User';
 
 export default defineEventHandler(async (event) => {
-  const repo = await AppDataSource.getRepository(User);
+  const repo = User.getRepository();
   const query = getQuery(event);
 
   if (query.email) {
