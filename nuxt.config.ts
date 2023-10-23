@@ -18,6 +18,11 @@ export default defineNuxtConfig({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             AUTH_ORIGIN: process.env.AUTH_ORIGIN,
             AUTH_SECRET: process.env.AUTH_SECRET,
+            MYSQL_HOST: process.env.MYSQL_HOST,
+            MYSQL_USER: process.env.MYSQL_USER,
+            MYSQL_PASSWORD: process.env.MYSQL_PASSWORD,
+            MYSQL_DATABASE: process.env.MYSQL_DATABASE,
+            MYSQL_PORT: process.env.MYSQL_PORT,
         },
         auth: {
             computed: {

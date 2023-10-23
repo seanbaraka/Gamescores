@@ -1,10 +1,12 @@
 import { BASE_URL, RAPID_HEADERS } from '~/common/rapidapi';
-
 export enum TTL {
   DAILY = 60 * 60 * 24,
   WEEKLY = 86400 * 7,
   MONTHLY = 604801 * 4,
 }
+
+// save user data to firebase
+
 
 export const getFixtures = async (params: any) => {
   // check for matches in the cache
