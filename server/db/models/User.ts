@@ -1,23 +1,38 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
+
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number | undefined;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar' })
-  email: string | undefined;
+  email: string;
 
-  @Column({ type: 'varchar', default: 'User', nullable: false })
-  role: string | undefined;
+  @Column({ type: 'varchar', nullable: true })
+  username?: string;
 
-  @Column({ type: 'boolean', default: false, nullable: false })
-  isPremium: boolean | undefined;
+  @Column({ type: 'varchar', nullable: true })
+  pfp?: string;
+
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
+  role: UserRole;
+
+  @Column({ type: 'boolean', default: false })
+  isPremium: boolean;
 
   @Column({ type: 'boolean', default: true })
-  active: boolean | undefined;
+  active: boolean;
 
-  @Column({ type: 'date', nullable: false, default: () => 'CURRENT_DATE'})
-  dateSignedUp: Date | undefined;
+  @CreateDateColumn()
+  dateSignedUp: Date;
 }
- 
