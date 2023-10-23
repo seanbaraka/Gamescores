@@ -1,14 +1,8 @@
 import { AppDataSource } from '~/server/db/data-source';
 import { User } from '~/server/db/models/User';
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('DB Connected');
-  })
-  .catch((err) => console.log(err));
-
 export default defineEventHandler(async (event) => {
-  const repo = AppDataSource.getRepository(User);
+  const repo = await AppDataSource.getRepository(User);
   const query = getQuery(event);
 
   if (query.email) {
@@ -29,5 +23,6 @@ export default defineEventHandler(async (event) => {
 
     return { user };
   }
-  return { users: await repo.find() };
+  const users = await repo.find();
+  return { users };
 });

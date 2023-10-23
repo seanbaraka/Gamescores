@@ -16,3 +16,5 @@ export const AppDataSource = new DataSource({
   subscribers: [],
   migrations: [],
 });
+
+AppDataSource.initialize();
