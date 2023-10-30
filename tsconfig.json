@@ -3,7 +3,8 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "experimentalDecorators": true,
-  "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
 
-}
+  }
 }

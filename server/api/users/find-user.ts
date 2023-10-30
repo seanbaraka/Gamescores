@@ -1,12 +1,11 @@
-import { AppDataSource } from "~/server/db/data-source";
 import { User } from "~/server/db/models/User";
 
 export default defineEventHandler(async (event) => {
 const userId = await getQuery(event).id;
-const repo = AppDataSource.getRepository(User);
+const repo = User.getRepository();
 try{
     if (userId) {
-        const user = await repo.findOne({ where: { id: Number(userId) } });
+        const user = await repo.findOne({ where: { id: String(userId) } });
         if (user) {
             console.log(user);
             return { status: 200, data: user };
